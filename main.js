@@ -12,8 +12,8 @@ function acceptCode() {
   // for now - one integer argument
   var output = "Varying argument " + args[0] + ":\n";
 
-  var start = 20;
-  var interval = 5;
+  var start = 500;
+  var interval = 500;
   var numPoints = 4;
   var funcDef = input;
   var [valsUsed, runtimes] = varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName);
@@ -34,8 +34,9 @@ function varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName) {
   // TODO: fix weird scoping issue with this being done by caller
   eval(funcDef);
 
-  for (i = 0; i < numPoints; i++) {
-    var arg = start + i * interval;
+  console.log("Num points: " + numPoints);
+  for (run = 0; run < numPoints; run++) {
+    var arg = start + run * interval;
     valsUsed.push(arg);
     var call = buildCallOneArg(funcName, arg);
     var program = call;
@@ -43,6 +44,8 @@ function varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName) {
     var startTime = performance.now();
     var output = eval(program);
     var endTime = performance.now();
+
+    console.log("Program result: " + output);
 
     var runtime = Math.round(endTime - startTime);
     runtimes.push(runtime);
