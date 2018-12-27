@@ -12,9 +12,9 @@ function acceptCode() {
   // for now - one integer argument
   var output = "Varying argument " + args[0] + ":\n";
 
-  var start = 500;
-  var interval = 500;
-  var numPoints = 4;
+  var start = 400;
+  var interval = 200;
+  var numPoints = 5;
   var funcDef = input;
   var [valsUsed, runtimes] = varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName);
 
@@ -22,6 +22,11 @@ function acceptCode() {
     output += "For " + args[0] + " = " + valsUsed[i] + ", runtime = " + runtimes[i] + " ms\n";
   }
   document.getElementById("output").innerHTML = "<pre>" + output + "</pre>";
+
+  var xLabel = "Value of " + args[0];
+  var yLabel = "Runtime (ms)";
+  var pairedData = parallelArraysToDataPairs(xLabel, yLabel, valsUsed, runtimes);
+  drawGraph(pairedData);
 }
 
 // returns 2-element array of parallel arrays: array of n values used and array of runtimes in milliseconds
@@ -57,4 +62,14 @@ function varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName) {
 // returns e.g. myFunc(1024);
 function buildCallOneArg(funcName, arg) {
   return funcName + "(" + arg + ");";
+}
+
+// returns [[xLabel, yLabel], [x1, y1], ..., [xn, yn]]
+function parallelArraysToDataPairs(xLabel, yLabel, xs, ys) {
+  var pairs = [[xLabel, yLabel]];
+  for (var i = 0; i < xs.length; i++) {
+    pairs.push([xs[i], ys[i]]);
+  }
+
+  return pairs;
 }
