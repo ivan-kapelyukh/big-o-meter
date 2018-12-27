@@ -1,12 +1,11 @@
 google.charts.load("current", {"packages": ["corechart"]});
-google.charts.setOnLoadCallBack(function () {
+google.charts.setOnLoadCallback(function () {
+  document.body.scrollTop = document.documentElement.scrollTop = 0;
   // document.getElementById("codeInput").scrollIntoView();
-  // document.body.scrollTop = document.documentElement.scrollTop = 0;
 });
 
 // takes array of x, y pair arrays, with first pair as headings
 function drawGraph(dataArrays) {
-  console.log(dataArrays);
   var data = google.visualization.arrayToDataTable(dataArrays);
 
   var hLabel = dataArrays[0][0];
