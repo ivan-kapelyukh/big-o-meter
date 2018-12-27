@@ -1,6 +1,9 @@
 <head>
   <title>Project Turing</title>
-  <script src="main.js"></script>
+  <!--TODO: include security hash-->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+  <script type="text/javascript" src="graph.js"></script>
 </head>
 <body>
   <textarea placeholder="Code to be analysed goes here" id="codeInput" rows="10" cols="80">
@@ -8,7 +11,7 @@ function iAmQuadratic(n) {
   var sum = 0;
   for (i = 1; i <= n; i++) {
     for (j = 1; j <= n; j++) {
-      sum += (i * j) % 1000000000;
+      sum = (sum + i * j) % 1000000000;
     }
   }
 
@@ -19,4 +22,5 @@ function iAmQuadratic(n) {
   <br/>
   <button onclick="acceptCode()">Analyse</button>
   <p id="output"></p>
+  <div id="chart-div" style="width:500px; height:500px"></div>
 </body>
