@@ -27,6 +27,30 @@ function acceptCode() {
   var yLabel = "Runtime (ms)";
   var pairedData = parallelArraysToDataPairs(xLabel, yLabel, valsUsed, runtimes);
   drawGraph(pairedData);
+
+  // shed the axis labels
+  pairedData.shift();
+
+  // complexity is an object taking the form:
+  // exponential: true, false
+  // degree: 0, 1, 2... (undefined if exponential is true)
+  var complexity = getComplexity(pairedData);
+  var complexityMsg;
+  if (complexity.exponential) {
+    complexityMsg = "exponential";
+  } else if (complexity.degree == 0) {
+    complexityMsg = "constant";
+  } else if (complexity.degree == 1) {
+    complexityMsg = "linear";
+  } else if (complexity.degree == 2) {
+    complexityMsg = "quadratic";
+  } else if (complexity.degree == 3) {
+    complexityMsg = "cubic";
+  } else {
+    complexityMsg = "polynomial of order " + complexity.degree;
+  }
+
+  document.getElementById("complexity").innerHTML = "Algorithm runtime complexity determined to be " + "<b>" + complexityMsg + "</b>";
 }
 
 // returns 2-element array of parallel arrays: array of n values used and array of runtimes in milliseconds
@@ -39,7 +63,6 @@ function varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName) {
   // TODO: fix weird scoping issue with this being done by caller
   eval(funcDef);
 
-  console.log("Num points: " + numPoints);
   for (run = 0; run < numPoints; run++) {
     var arg = start + run * interval;
     valsUsed.push(arg);
@@ -50,7 +73,6 @@ function varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName) {
     var output = eval(program);
     var endTime = performance.now();
 
-    console.log("Program result: " + output);
 
     var runtime = Math.round(endTime - startTime);
     runtimes.push(runtime);
