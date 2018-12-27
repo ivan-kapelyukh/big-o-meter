@@ -12,8 +12,8 @@ function acceptCode() {
   // for now - one integer argument
   var output = "Varying argument " + args[0] + ":\n";
 
-  var start = 400;
-  var interval = 200;
+  var start = 300;
+  var interval = 100;
   var numPoints = 5;
   var funcDef = input;
   var [valsUsed, runtimes] = varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName);
