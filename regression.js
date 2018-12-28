@@ -27,10 +27,15 @@ function linearRegression(data, options) {
 
   var run = len * sum[2] - sum[0] * sum[0];
   var rise = len * sum[3] - sum[0] * sum[1];
-  var gradient = run === 0 ? 0 : Math.round(rise / run, options.precision);
-  var intercept = Math.round(sum[1] / len - gradient * sum[0] / len, options.precision);
+  var gradient = run === 0 ? 0 : round(rise / run, options.precision);
+  var intercept = round(sum[1] / len - gradient * sum[0] / len, options.precision);
 
   return {
     equation: [gradient, intercept],
   };
+}
+
+function round(x, decimalPlaces) {
+  var factor = Math.pow(10, decimalPlaces);
+  return Math.round(x * factor) / factor;
 }

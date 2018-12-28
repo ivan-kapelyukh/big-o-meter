@@ -33,14 +33,15 @@ function getExpCurve(data) {
   // need to look at big n
 
 // polyCurve has form: y = k * x ^ n, so has fields k, cn
+// TODO: can try handling fractional powers at some point
 function getPolyCurve(data) {
   var polyCurve = {};
   var dataLogified = data.map(([n, t]) => ([Math.log2(n), Math.log2(t)]));
   var bestFitLine = getBestFitLine(dataLogified);
-  polyCurve.n = bestFitLine.m;
+  polyCurve.n = round(bestFitLine.m, 0);
   polyCurve.k = Math.pow(2, bestFitLine.c);
 
-  return polyCurve; 
+  return polyCurve;
 }
 
 // returns straight line y = m * x + c, so has fields m, c
