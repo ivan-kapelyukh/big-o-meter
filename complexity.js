@@ -2,11 +2,27 @@
 function getComplexity(data) {
   var complexity = {};
 
-  var expCurve = getExpCurve(data);
-  var polyCurve = getPolyCurve(data);
+  var n = data.length;
 
-  var expR2 = getR2("exponential", expCurve, data);
-  var polyR2 = getR2("polynomial", polyCurve, data);
+  var training = [];
+  var trainCount = Math.ceil(n / 2.0);
+  for (var i = 0; i < trainCount; i++) {
+    training.push(data[i]);
+  }
+
+  var testing = [];
+  for (var i = trainCount; i < n; i++) {
+    testing.push(data[i]);
+  }
+
+  var expCurve = getExpCurve(training);
+  var polyCurve = getPolyCurve(training);
+
+  console.log("Training: " + training);
+  console.log("Testing: " + testing);
+
+  var expR2 = getR2("exponential", expCurve, testing);
+  var polyR2 = getR2("polynomial", polyCurve, testing);
   console.log("expR2: " + expR2 + ", expCurve: ");
   console.log(expCurve);
   console.log("polyR2: " + polyR2 + ", polyCurve: ");
@@ -44,6 +60,7 @@ function getPolyCurve(data) {
   var bestFitLine = getBestFitLine(dataLogified);
   polyCurve.n = round(bestFitLine.m, 0);
   polyCurve.k = Math.pow(2, bestFitLine.c);
+  // console.log("Polynom from gradient: " + bestFitLine.m + ", with k: " + polyCurve.k);
 
   return polyCurve;
 }
@@ -67,7 +84,7 @@ function getR2(curveType, curve, data) {
   for (var i = 0; i < n; i++) {
     yMean += data[i][1];
   }
-  yMean /= n; // argh, forgot this line...
+  yMean /= n;
 
   var ssTotal = 0;
   var ssResidual = 0;
@@ -75,20 +92,21 @@ function getR2(curveType, curve, data) {
     var x = data[i][0];
     var y = data[i][1];
     var predicted = getPredictionForX(curveType, curve, x);
-    console.log("For point " + x + ", prediction: " + predicted);
+    // if (curveType === "exponential")
+      // console.log("For point " + x + ", actual: " + y + ", prediction: " + predicted);
     ssTotal += Math.pow(y - yMean, 2);
     ssResidual += Math.pow(y - predicted, 2);
   }
 
-  console.log("ssRes: " + ssResidual + ", ssTot: " + ssTotal);
+  // console.log("ssRes: " + ssResidual + ", ssTot: " + ssTotal);
   return 1 - (ssResidual / ssTotal);
 }
 
 function getPredictionForX(curveType, curve, x) {
   if (curveType === "polynomial") {
-    return curve.k * Math.pow(x, curve.n) + 0.143; // TEMP // argh, ^ XOR is not pow
+    return curve.k * Math.pow(x, curve.n) + 0.143;
   } else if (curveType == "exponential") {
-    // note the "prefer base 2 instead of e" convention
+    /* note the "prefer base 2 instead of e" convention */
     return curve.k * Math.pow(2, curve.c * x);
   } else {
     console.log("Unrecognised curve type in R2 determination");
