@@ -3,23 +3,29 @@ function getComplexity(data) {
   var complexity = {};
 
   var n = data.length;
+  var third = n / 3;
 
-  var training = [];
-  var trainCount = Math.ceil(n / 2.0);
-  for (var i = 0; i < trainCount; i++) {
-    training.push(data[i]);
+  if (n % 3 != 0) {
+    console.log("Number of points should be multiple of 3");
   }
 
   var testing = [];
-  for (var i = trainCount; i < n; i++) {
+  var training = []
+  for (var i = 0; i < third; i++) {
+    training.push(data[i]);
+  }
+  for (var i = third; i < 2 * third; i++) {
     testing.push(data[i]);
+  }
+  for (var i = 2 * third; i < n; i++) {
+    training.push(data[i]);
   }
 
   var expCurve = getExpCurve(training);
   var polyCurve = getPolyCurve(training);
 
-  console.log("Training: " + training);
-  console.log("Testing: " + testing);
+  console.log("testing: " + testing);
+  console.log("training: " + training);
 
   var expR2 = getR2("exponential", expCurve, testing);
   var polyR2 = getR2("polynomial", polyCurve, testing);
@@ -104,7 +110,7 @@ function getR2(curveType, curve, data) {
 
 function getPredictionForX(curveType, curve, x) {
   if (curveType === "polynomial") {
-    return curve.k * Math.pow(x, curve.n) + 0.143;
+    return curve.k * Math.pow(x, curve.n);
   } else if (curveType == "exponential") {
     /* note the "prefer base 2 instead of e" convention */
     return curve.k * Math.pow(2, curve.c * x);
@@ -113,6 +119,7 @@ function getPredictionForX(curveType, curve, x) {
   }
 }
 
-// TODO: formalise testing!
+// TODO: formalise training!
 // console.log("R2 test: " + getR2("polynomial", ({k: 1.229, n: 1}), [[2, 2], [3, 4], [4, 6], [6, 7]]));
 // expected answer: 0.895 (https://internal.ncl.ac[dot]uk/ask/numeracy-maths-statistics/statistics/regression-and-correlation/coefficient-of-determination-r-squared.html#Worked%20Example)
+// (with the +0.143 in the prediction function return)
