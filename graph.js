@@ -4,30 +4,32 @@ google.charts.setOnLoadCallback(function () {
   // document.getElementById("codeInput").scrollIntoView();
 });
 
-// takes array of x, y pair arrays, with first pair as headings
+// takes array of n-tuple arrays, with first tuple as headings
 function drawGraph(dataArrays) {
-  var data = google.visualization.arrayToDataTable(dataArrays);
+  var data = new google.visualization.DataTable();
 
-  var hLabel = dataArrays[0][0];
-  var hMin = dataArrays[1][0];
-  var hMax = dataArrays[dataArrays.length - 1][0];
+  var headings = dataArrays.shift();
+  for (heading in headings) {
+    data.addColumn("number", heading);
+  }
 
-  var vLabel = dataArrays[0][1];
-  var vMin = dataArrays[1][1];
-  var vMax = dataArrays[dataArrays.length - 1][1];
+  data.addRows(dataArrays);
+
+  var n = dataArrays.length;
+  var maxInputSize = dataArrays[n - 1][0];
+
+  // stop at actual value, plus some margin
+  var maxTime = Math.ceil(dataArrays[n - 1][1] * 1.2);
+  // if we want to see all the data:
+  // var numCols = dataArrays[0].length;
+  // for (var i = 1; i < numCols; i++) { // start at 1 to skip hVal
+  //   maxTime = Math.max(maxTime, dataArrays[n - 1][i]);
+  // }
 
   var options = {
     title: "Runtime vs input size",
-    hAxis: {title: hLabel, minValue: 0, maxValue: Math.ceil(hMax)},
-    vAxis: {title: vLabel, minValue: 0, maxValue: Math.ceil(vMax)},
-    legend: "none",
-    trendlines: {
-      0: {
-        type: 'polynomial',
-        degree: 2,
-        visibleInLegend: false,
-      }
-    }
+    hAxis: {title: "Input size", minValue: 0, maxValue: maxInputSize},
+    vAxis: {title: "Runtime (ms)", minValue: 0, viewWindow: ({max: maxTime})}
   };
 
   var graphElem = document.getElementById("chart-div");

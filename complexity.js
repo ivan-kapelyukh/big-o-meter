@@ -1,5 +1,10 @@
 // takes array of pair arrays, e.g. [[n1, t1], ..., [nm, tm]]
-function getComplexity(data) {
+// returns complexityData object:
+  // type: "exponential", "polynomial"
+  // degree: 0, 1, 2, ... (undefined if type is not polynomial)
+  // bestExpCurve: expCurve object with fields k, c
+  // bestPolyCurve: polyCurve object with fields k, n
+function analyseComplexity(data) {
   var complexity = {};
 
   var n = data.length;
@@ -17,6 +22,9 @@ function getComplexity(data) {
 
   var expCurve = getExpCurve(training);
   var polyCurve = getPolyCurve(training);
+
+  complexity.expCurve = expCurve;
+  complexity.polyCurve = polyCurve;
 
   console.log("Training: " + training);
   console.log("Testing: " + testing);
@@ -60,6 +68,7 @@ function getPolyCurve(data) {
   var bestFitLine = getBestFitLine(dataLogified);
   polyCurve.n = round(bestFitLine.m, 0);
   polyCurve.k = Math.pow(2, bestFitLine.c);
+  console.log(bestFitLine.c);
   // console.log("Polynom from gradient: " + bestFitLine.m + ", with k: " + polyCurve.k);
 
   return polyCurve;
@@ -104,13 +113,35 @@ function getR2(curveType, curve, data) {
 
 function getPredictionForX(curveType, curve, x) {
   if (curveType === "polynomial") {
-    return curve.k * Math.pow(x, curve.n) + 0.143;
+    return curve.k * Math.pow(x, curve.n);
   } else if (curveType == "exponential") {
     /* note the "prefer base 2 instead of e" convention */
     return curve.k * Math.pow(2, curve.c * x);
   } else {
     console.log("Unrecognised curve type in R2 determination");
   }
+}
+
+// takes array of run data rows, and complexityData object
+// returns array of data rows, with first row as graph series headings (first heading horizontal axis, rest vertical)
+function complexityDataToGraph(runData, complexityData) {
+  var graphData = [];
+  var hLabel = "Input size";
+  var v1Label = "Actual runtime (ms)";
+  var v2Label = "Exponential predicted runtime (ms)";
+  var v3Label = "Polynomial predicted runtime (ms)";
+  graphData.push([hLabel, v1Label, v2Label, v3Label]);
+
+  var n = runData.length;
+  for (var i = 0; i < n; i++) {
+    var inputSize = runData[i][0];
+    var actualRuntime = runData[i][1];
+    var expPrediction = getPredictionForX("exponential", complexityData.expCurve, inputSize);
+    var polyPrediction = getPredictionForX("polynomial", complexityData.polyCurve, inputSize);
+    graphData.push([inputSize, actualRuntime, expPrediction, polyPrediction]);
+  }
+
+  return graphData;
 }
 
 // TODO: formalise testing!
