@@ -12,8 +12,8 @@ function acceptCode() {
   // for now - one integer argument
   var output = "Varying argument " + args[0] + ":\n";
 
-  var start = 15;
-  var interval = 2;
+  var start = 200;
+  var interval = 150;
   var numPoints = 10;
   var funcDef = input;
   var [valsUsed, runtimes] = varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName);
@@ -23,30 +23,21 @@ function acceptCode() {
   }
   document.getElementById("output").innerHTML = "<pre>" + output + "</pre>";
 
-  var xLabel = "Value of " + args[0];
-  var yLabel = "Runtime (ms)";
-  var pairedData = parallelArraysToDataPairs(xLabel, yLabel, valsUsed, runtimes);
-  drawGraph(pairedData);
+  var pairedData = parallelArraysToDataPairs(valsUsed, runtimes);
+  var complexityData = analyseComplexity(pairedData);
+  var graphableData = complexityDataToGraph(pairedData, complexityData);
+  drawGraph(graphableData);
 
-  // shed the axis labels
-  pairedData.shift();
-
-  console.log("Paired data after shift: " + pairedData);
-
-  // complexity is an object taking the form:
-  // exponential: true, false
-  // degree: 0, 1, 2... (undefined if exponential is true)
-  var complexity = getComplexity(pairedData);
   var complexityMsg;
-  if (complexity.exponential) {
+  if (complexityData.exponential) {
     complexityMsg = "exponential";
-  } else if (complexity.degree == 0) {
+  } else if (complexityData.degree == 0) {
     complexityMsg = "constant";
-  } else if (complexity.degree == 1) {
+  } else if (complexityData.degree == 1) {
     complexityMsg = "linear";
-  } else if (complexity.degree == 2) {
+  } else if (complexityData.degree == 2) {
     complexityMsg = "quadratic";
-  } else if (complexity.degree == 3) {
+  } else if (complexityData.degree == 3) {
     complexityMsg = "cubic";
   } else {
     complexityMsg = "polynomial of order " + complexity.degree;
@@ -88,13 +79,12 @@ function buildCallOneArg(funcName, arg) {
   return funcName + "(" + arg + ");";
 }
 
-// returns [[xLabel, yLabel], [x1, y1], ..., [xn, yn]]
-function parallelArraysToDataPairs(xLabel, yLabel, xs, ys) {
-  var pairs = [[xLabel, yLabel]];
+// returns [[x1, y1], ..., [xn, yn]]
+function parallelArraysToDataPairs(xs, ys) {
+  var pairs = [];
   for (var i = 0; i < xs.length; i++) {
     pairs.push([xs[i], ys[i]]);
   }
 
-  console.log("Pairs: " + pairs);
   return pairs;
 }
