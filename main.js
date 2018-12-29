@@ -14,7 +14,7 @@ function acceptCode() {
 
   var start = 300;
   var interval = 100;
-  var numPoints = 5;
+  var numPoints = 8;
   var funcDef = input;
   var [valsUsed, runtimes] = varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName);
 
