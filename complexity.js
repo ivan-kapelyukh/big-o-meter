@@ -2,11 +2,27 @@
 function getComplexity(data) {
   var complexity = {};
 
-  var expCurve = getExpCurve(data);
-  var polyCurve = getPolyCurve(data);
+  var n = data.length;
 
-  var expR2 = getR2("exponential", expCurve, data);
-  var polyR2 = getR2("polynomial", polyCurve, data);
+  var training = [];
+  var trainCount = Math.ceil(n / 2.0);
+  for (var i = 0; i < trainCount; i++) {
+    training.push(data[i]);
+  }
+
+  var testing = [];
+  for (var i = trainCount; i < n; i++) {
+    testing.push(data[i]);
+  }
+
+  var expCurve = getExpCurve(training);
+  var polyCurve = getPolyCurve(training);
+
+  console.log("Training: " + training);
+  console.log("Testing: " + testing);
+
+  var expR2 = getR2("exponential", expCurve, testing);
+  var polyR2 = getR2("polynomial", polyCurve, testing);
   console.log("expR2: " + expR2 + ", expCurve: ");
   console.log(expCurve);
   console.log("polyR2: " + polyR2 + ", polyCurve: ");

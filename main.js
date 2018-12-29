@@ -12,9 +12,9 @@ function acceptCode() {
   // for now - one integer argument
   var output = "Varying argument " + args[0] + ":\n";
 
-  var start = 200;
-  var interval = 200;
-  var numPoints = 8;
+  var start = 15;
+  var interval = 2;
+  var numPoints = 10;
   var funcDef = input;
   var [valsUsed, runtimes] = varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName);
 
@@ -30,6 +30,8 @@ function acceptCode() {
 
   // shed the axis labels
   pairedData.shift();
+
+  console.log("Paired data after shift: " + pairedData);
 
   // complexity is an object taking the form:
   // exponential: true, false
@@ -93,5 +95,6 @@ function parallelArraysToDataPairs(xLabel, yLabel, xs, ys) {
     pairs.push([xs[i], ys[i]]);
   }
 
+  console.log("Pairs: " + pairs);
   return pairs;
 }
