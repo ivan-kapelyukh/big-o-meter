@@ -12,19 +12,19 @@ function acceptCode() {
   // for now - one integer argument
   var output = "Varying argument " + args[0] + ":\n";
 
-  var inputType = "integer";
-  var start = 200;
-  var interval = 150;
-  var numPoints = 10;
   var funcDef = input;
-  var [valsUsed, runtimes] = varyRuntimes(start, interval, numPoints, funcDef, funcName, inputType);
+  var inputType = "integer";
+  var inputSizes = getInputSizes(funcDef, funcName, inputType);
+  var inputs = generateInputs(inputType, inputSizes);
+  var runtimes = varyRuntimes(funcDef, funcName, inputs);
 
-  for (i = 0; i < numPoints; i++) {
-    output += "For " + args[0] + " = " + valsUsed[i] + ", runtime = " + runtimes[i] + " ms\n";
+  var numInputs = inputSizes.length;
+  for (i = 0; i < numInputs; i++) {
+    output += "For " + args[0] + " = " + inputs[i] + ", runtime = " + runtimes[i] + " ms\n";
   }
   document.getElementById("output").innerHTML = "<pre>" + output + "</pre>";
 
-  var pairedData = parallelArraysToDataPairs(valsUsed, runtimes);
+  var pairedData = parallelArraysToDataPairs(inputs, runtimes);
   var complexityData = analyseComplexity(pairedData);
   var graphableData = complexityDataToGraph(pairedData, complexityData);
   drawGraph(graphableData);
@@ -49,31 +49,26 @@ function acceptCode() {
 
 // returns 2-element array of parallel arrays: array of n values used and array of runtimes in milliseconds
 // TODO: do many runs, calculate error, etc
-function varyRuntimes(start, interval, numPoints, funcDef, funcName, inputType) {
-  var valsUsed = [];
+function varyRuntimes(funcDef, funcName, inputs) {
   var runtimes = [];
 
   // register the function in our scope
   // TODO: fix weird scoping issue with this being done by caller
   eval(funcDef);
 
-  for (run = 0; run < numPoints; run++) {
-    var inputSize = start + run * interval;
-    var arg = generateArg(inputSize, inputType);
-    valsUsed.push(arg);
-    var call = buildCallOneArg(funcName, arg);
+  for (var run = 0; run < inputs.length; run++) {
+    var call = buildCallOneArg(funcName, inputs[run]);
     var program = call;
 
     var startTime = performance.now();
     var output = eval(program);
     var endTime = performance.now();
 
-
     var runtime = Math.round(endTime - startTime);
     runtimes.push(runtime);
   }
 
-  return [valsUsed, runtimes];
+  return runtimes;
 }
 
 // returns e.g. myFunc(1024);
@@ -112,4 +107,25 @@ function generateArg(inputSize, inputType) {
     }
     return intArr;
   }
+}
+
+function generateInputs(inputType, inputSizes) {
+  var inputs = [];
+  for (var i = 0; i < inputSizes.length; i++) {
+    inputs.push(generateArg(inputSizes[i], inputType));
+  }
+
+  return inputs;
+}
+
+function getInputSizes(funcDef, funcName, inputType) {
+  var inputSizes = [];
+  var start = 200;
+  var interval = 150;
+  var numSizes = 12;
+  for (var i = 0; i < numSizes; i++) {
+    inputSizes.push(start + i * interval);
+  }
+  
+  return inputSizes;
 }

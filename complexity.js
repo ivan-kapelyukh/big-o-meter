@@ -71,7 +71,6 @@ function getPolyCurve(data) {
   var bestFitLine = getBestFitLine(dataLogified);
   polyCurve.n = round(bestFitLine.m, 0);
   polyCurve.k = Math.pow(2, bestFitLine.c);
-  console.log(bestFitLine.c);
   // console.log("Polynom from gradient: " + bestFitLine.m + ", with k: " + polyCurve.k);
 
   return polyCurve;
