@@ -12,39 +12,33 @@ function acceptCode() {
   // for now - one integer argument
   var output = "Varying argument " + args[0] + ":\n";
 
-  var start = 300;
+  var inputType = "integer";
+  var start = 200;
   var interval = 150;
-  var numPoints = 12;
+  var numPoints = 10;
   var funcDef = input;
-  var [valsUsed, runtimes] = varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName);
+  var [valsUsed, runtimes] = varyRuntimes(start, interval, numPoints, funcDef, funcName, inputType);
 
   for (i = 0; i < numPoints; i++) {
     output += "For " + args[0] + " = " + valsUsed[i] + ", runtime = " + runtimes[i] + " ms\n";
   }
   document.getElementById("output").innerHTML = "<pre>" + output + "</pre>";
 
-  var xLabel = "Value of " + args[0];
-  var yLabel = "Runtime (ms)";
-  var pairedData = parallelArraysToDataPairs(xLabel, yLabel, valsUsed, runtimes);
-  drawGraph(pairedData);
+  var pairedData = parallelArraysToDataPairs(valsUsed, runtimes);
+  var complexityData = analyseComplexity(pairedData);
+  var graphableData = complexityDataToGraph(pairedData, complexityData);
+  drawGraph(graphableData);
 
-  // shed the axis labels
-  pairedData.shift();
-
-  // complexity is an object taking the form:
-  // exponential: true, false
-  // degree: 0, 1, 2... (undefined if exponential is true)
-  var complexity = getComplexity(pairedData);
   var complexityMsg;
-  if (complexity.exponential) {
+  if (complexityData.exponential) {
     complexityMsg = "exponential";
-  } else if (complexity.degree == 0) {
+  } else if (complexityData.degree == 0) {
     complexityMsg = "constant";
-  } else if (complexity.degree == 1) {
+  } else if (complexityData.degree == 1) {
     complexityMsg = "linear";
-  } else if (complexity.degree == 2) {
+  } else if (complexityData.degree == 2) {
     complexityMsg = "quadratic";
-  } else if (complexity.degree == 3) {
+  } else if (complexityData.degree == 3) {
     complexityMsg = "cubic";
   } else {
     complexityMsg = "polynomial of order " + complexity.degree;
@@ -55,7 +49,7 @@ function acceptCode() {
 
 // returns 2-element array of parallel arrays: array of n values used and array of runtimes in milliseconds
 // TODO: do many runs, calculate error, etc
-function varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName) {
+function varyRuntimes(start, interval, numPoints, funcDef, funcName, inputType) {
   var valsUsed = [];
   var runtimes = [];
 
@@ -64,7 +58,8 @@ function varyRuntimesOneIntArg(start, interval, numPoints, funcDef, funcName) {
   eval(funcDef);
 
   for (run = 0; run < numPoints; run++) {
-    var arg = start + run * interval;
+    var inputSize = start + run * interval;
+    var arg = generateArg(inputSize, inputType);
     valsUsed.push(arg);
     var call = buildCallOneArg(funcName, arg);
     var program = call;
@@ -86,12 +81,35 @@ function buildCallOneArg(funcName, arg) {
   return funcName + "(" + arg + ");";
 }
 
-// returns [[xLabel, yLabel], [x1, y1], ..., [xn, yn]]
-function parallelArraysToDataPairs(xLabel, yLabel, xs, ys) {
-  var pairs = [[xLabel, yLabel]];
+// returns [[x1, y1], ..., [xn, yn]]
+function parallelArraysToDataPairs(xs, ys) {
+  var pairs = [];
   for (var i = 0; i < xs.length; i++) {
     pairs.push([xs[i], ys[i]]);
   }
 
   return pairs;
+}
+
+// TODO: handle input contents contraints, e.g. negative nums in int array? etc
+function generateArg(inputSize, inputType) {
+  if (inputType === "integer") {
+    return inputSize;
+  } else if (inputType === "string") {
+    var charArr = [];
+    var base = 'a'.charCodeAt(0)
+    var range = 'z'.charCodeAt(0) - base;
+    for (var i = 0; i < inputSize; i++) {
+      var charNum = Math.floor(Math.random() * (range + 1)) + base;
+      charArr.push(String.fromCharCode(charNum));
+    }
+    return charArr.join("");
+  } else if (inputType === "integer-array") {
+    var valueUBound = 100;
+    var intArr = [];
+    for (var i = 0; i < inputSize; i++) {
+      intArr.push(Math.floor(Math.random() * valueUBound));
+    }
+    return intArr;
+  }
 }

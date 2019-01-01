@@ -1,5 +1,10 @@
 // takes array of pair arrays, e.g. [[n1, t1], ..., [nm, tm]]
-function getComplexity(data) {
+// returns complexityData object:
+  // type: "exponential", "polynomial"
+  // degree: 0, 1, 2, ... (undefined if type is not polynomial)
+  // bestExpCurve: expCurve object with fields k, c
+  // bestPolyCurve: polyCurve object with fields k, n
+function analyseComplexity(data) {
   var complexity = {};
 
   var n = data.length;
@@ -24,8 +29,8 @@ function getComplexity(data) {
   var expCurve = getExpCurve(training);
   var polyCurve = getPolyCurve(training);
 
-  console.log("testing: " + testing);
-  console.log("training: " + training);
+  complexity.expCurve = expCurve;
+  complexity.polyCurve = polyCurve;
 
   var expR2 = getR2("exponential", expCurve, testing);
   var polyR2 = getR2("polynomial", polyCurve, testing);
@@ -66,6 +71,7 @@ function getPolyCurve(data) {
   var bestFitLine = getBestFitLine(dataLogified);
   polyCurve.n = round(bestFitLine.m, 0);
   polyCurve.k = Math.pow(2, bestFitLine.c);
+  console.log(bestFitLine.c);
   // console.log("Polynom from gradient: " + bestFitLine.m + ", with k: " + polyCurve.k);
 
   return polyCurve;
@@ -119,7 +125,29 @@ function getPredictionForX(curveType, curve, x) {
   }
 }
 
-// TODO: formalise training!
+// takes array of run data rows, and complexityData object
+// returns array of data rows, with first row as graph series headings (first heading horizontal axis, rest vertical)
+function complexityDataToGraph(runData, complexityData) {
+  var graphData = [];
+  var hLabel = "Input size";
+  var v1Label = "Actual runtime (ms)";
+  var v2Label = "Exponential predicted runtime (ms)";
+  var v3Label = "Polynomial predicted runtime (ms)";
+  graphData.push([hLabel, v1Label, v2Label, v3Label]);
+
+  var n = runData.length;
+  for (var i = 0; i < n; i++) {
+    var inputSize = runData[i][0];
+    var actualRuntime = runData[i][1];
+    var expPrediction = getPredictionForX("exponential", complexityData.expCurve, inputSize);
+    var polyPrediction = getPredictionForX("polynomial", complexityData.polyCurve, inputSize);
+    graphData.push([inputSize, actualRuntime, expPrediction, polyPrediction]);
+  }
+
+  return graphData;
+}
+
+// TODO: formalise testing!
 // console.log("R2 test: " + getR2("polynomial", ({k: 1.229, n: 1}), [[2, 2], [3, 4], [4, 6], [6, 7]]));
 // expected answer: 0.895 (https://internal.ncl.ac[dot]uk/ask/numeracy-maths-statistics/statistics/regression-and-correlation/coefficient-of-determination-r-squared.html#Worked%20Example)
 // (with the +0.143 in the prediction function return)
