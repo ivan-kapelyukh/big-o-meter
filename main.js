@@ -1,6 +1,7 @@
 function acceptCode() {
 
   var input = document.getElementById("codeInput").value;
+  var inputArgType = document.getElementById("input-type-selector").value;
 
   // grabs prefix until first ( character, e.g. "function   myFunc   "
   // then grabs second word, i.e. the function name
@@ -9,13 +10,12 @@ function acceptCode() {
   var args = input.substring(input.indexOf("(") + 1, input.indexOf(")")).split(/[, ]+/);
   var numArgs = args.length;
 
-  // for now - one integer argument
+  // for now - one argument
   var output = "Varying argument " + args[0] + ":\n";
 
   var funcDef = input;
-  var inputType = "integer";
-  var inputSizes = getInputSizes(funcDef, funcName, inputType);
-  var inputs = generateInputs(inputType, inputSizes);
+  var inputSizes = getInputSizes(funcDef, funcName, inputArgType);
+  var inputs = generateInputs(inputArgType, inputSizes);
   var runtimes = varyRuntimes(funcDef, funcName, inputs);
 
   var numInputs = inputSizes.length;
@@ -120,7 +120,7 @@ function generateInputs(inputType, inputSizes) {
 
 function getInputSizes(funcDef, funcName, inputType) {
   var inputSizes = [];
-  var start = 200;
+  var start = 300;
   var interval = 150;
   var numSizes = 12;
   for (var i = 0; i < numSizes; i++) {
