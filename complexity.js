@@ -43,7 +43,8 @@ function analyseComplexity(data) {
     complexity.exponential = true;
   } else {
     complexity.exponential = false;
-    complexity.degree = polyCurve.n;
+    // TODO: get order of overall polynom
+    complexity.degree = Math.round(polyCurve.n);
   }
 
   return complexity;
@@ -67,10 +68,13 @@ function getExpCurve(data) {
 // TODO: can try handling fractional powers at some point
 function getPolyCurve(data) {
   var polyCurve = {};
-  var dataLogified = data.map(([n, t]) => ([Math.log2(n), Math.log2(t)]));
-  var bestFitLine = getBestFitLine(dataLogified);
-  polyCurve.n = round(bestFitLine.m, 0);
-  polyCurve.k = Math.pow(2, bestFitLine.c);
+  var powerResult = fitPower(data, {precision: 10}).equation;
+  polyCurve.k = powerResult[0];
+  polyCurve.n = powerResult[1];
+  // var dataLogified = data.map(([n, t]) => ([Math.log2(n), Math.log2(t)]));
+  // var bestFitLine = getBestFitLine(dataLogified);
+  // polyCurve.n = round(bestFitLine.m, 0);
+  // polyCurve.k = Math.pow(2, bestFitLine.c);
   // console.log("Polynom from gradient: " + bestFitLine.m + ", with k: " + polyCurve.k);
 
   return polyCurve;
