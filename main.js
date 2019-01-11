@@ -19,12 +19,13 @@ function acceptCode() {
   var runtimes = varyRuntimes(funcDef, funcName, inputs);
 
   var numInputs = inputSizes.length;
+  // TODO: maybe output actual args used as well
   for (i = 0; i < numInputs; i++) {
-    output += "For " + args[0] + " = " + inputs[i] + ", runtime = " + runtimes[i] + " ms\n";
+    output += "For n = " + inputSizes[i] + ", runtime = " + runtimes[i] + " ms\n";
   }
   document.getElementById("output").innerHTML = "<pre>" + output + "</pre>";
 
-  var pairedData = parallelArraysToDataPairs(inputs, runtimes);
+  var pairedData = parallelArraysToDataPairs(inputSizes, runtimes);
   var complexityData = analyseComplexity(pairedData);
   var graphableData = complexityDataToGraph(pairedData, complexityData);
   drawGraph(graphableData);
@@ -59,6 +60,7 @@ function varyRuntimes(funcDef, funcName, inputs) {
   for (var run = 0; run < inputs.length; run++) {
     var call = buildCallOneArg(funcName, inputs[run]);
     var program = call;
+    console.log("Generated call: " + call);
 
     var startTime = performance.now();
     var output = eval(program);
@@ -87,7 +89,7 @@ function parallelArraysToDataPairs(xs, ys) {
 }
 
 // TODO: handle input contents contraints, e.g. negative nums in int array? etc
-function generateArg(inputSize, inputType) {
+function generateArgStr(inputSize, inputType) {
   if (inputType === "integer") {
     return inputSize;
   } else if (inputType === "string") {
@@ -98,21 +100,21 @@ function generateArg(inputSize, inputType) {
       var charNum = Math.floor(Math.random() * (range + 1)) + base;
       charArr.push(String.fromCharCode(charNum));
     }
-    return charArr.join("");
+    return "\"" + charArr.join("") + "\"";
   } else if (inputType === "integer-array") {
     var valueUBound = 100;
     var intArr = [];
     for (var i = 0; i < inputSize; i++) {
       intArr.push(Math.floor(Math.random() * valueUBound));
     }
-    return intArr;
+    return "{" + intArr.join(", ") + "}";
   }
 }
 
 function generateInputs(inputType, inputSizes) {
   var inputs = [];
   for (var i = 0; i < inputSizes.length; i++) {
-    inputs.push(generateArg(inputSizes[i], inputType));
+    inputs.push(generateArgStr(inputSizes[i], inputType));
   }
 
   return inputs;
