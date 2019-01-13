@@ -23,7 +23,7 @@ function acceptCode() {
   for (i = 0; i < numInputs; i++) {
     output += "For n = " + inputSizes[i] + ", runtime = " + runtimes[i] + " ms\n";
   }
-  document.getElementById("output").innerHTML = "<pre>" + output + "</pre>";
+  outputLine(output);
 
   var pairedData = parallelArraysToDataPairs(inputSizes, runtimes);
   var complexityData = analyseComplexity(pairedData);
@@ -130,4 +130,9 @@ function getInputSizes(funcDef, funcName, inputType) {
   }
   
   return inputSizes;
+}
+
+function outputLine(text) {
+  var elem = document.getElementById("output");
+  elem.innerHTML = elem.innerHTML + "<pre>" + text + "</pre>";
 }
