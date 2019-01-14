@@ -58,19 +58,23 @@ function varyRuntimes(funcDef, funcName, inputs) {
   eval(funcDef);
 
   for (var run = 0; run < inputs.length; run++) {
-    var call = buildCallOneArg(funcName, inputs[run]);
-    var program = call;
-    console.log("Generated call: " + call);
-
-    var startTime = performance.now();
-    var output = eval(program);
-    var endTime = performance.now();
-
-    var runtime = Math.round(endTime - startTime);
+    var program = buildCallOneArg(funcName, inputs[run]);
+    console.log("Generated call: " + program);
+    var [runtime, output] = timedRun(program);
     runtimes.push(runtime);
   }
 
   return runtimes;
+}
+
+// returns [runtime, eval result]
+function timedRun(program) {
+  var startTime = performance.now();
+  var output = eval(program);
+  var endTime = performance.now();
+
+  var runtime = Math.round(endTime - startTime);
+  return [runtime, output];
 }
 
 // returns e.g. myFunc(1024);
