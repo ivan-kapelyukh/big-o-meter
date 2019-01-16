@@ -13,10 +13,11 @@ function acceptCode() {
   // for now - one argument
   var output = "Varying argument " + args[0] + ":\n";
 
-  var funcDef = input;
-  var inputSizes = getInputSizes(funcDef, funcName, inputArgType);
+  eval("var func = " + input);
+
+  var inputSizes = getInputSizes(func, inputArgType);
   var inputs = generateInputs(inputArgType, inputSizes);
-  var runtimes = varyRuntimes(funcDef, funcName, inputs);
+  var runtimes = varyRuntimes(func, inputs);
 
   var numInputs = inputSizes.length;
   // TODO: maybe output actual args used as well
@@ -50,17 +51,12 @@ function acceptCode() {
 
 // returns 2-element array of parallel arrays: array of n values used and array of runtimes in milliseconds
 // TODO: do many runs, calculate error, etc
-function varyRuntimes(funcDef, funcName, inputs) {
+function varyRuntimes(func, inputs) {
   var runtimes = [];
 
-  // register the function in our scope
-  // TODO: fix weird scoping issue with this being done by caller
-  eval(funcDef);
-
   for (var run = 0; run < inputs.length; run++) {
-    var program = buildCallOneArg(funcName, inputs[run]);
-    console.log("Generated call: " + program);
-    var [runtime, output] = timedRun(program);
+    // console.log("Generated call: " + program);
+    var [runtime, output] = timedRun(func, inputs[run]);
     runtimes.push(runtime);
   }
 
@@ -68,9 +64,9 @@ function varyRuntimes(funcDef, funcName, inputs) {
 }
 
 // returns [runtime, eval result]
-function timedRun(program) {
+function timedRun(program, input) {
   var startTime = performance.now();
-  var output = eval(program);
+  var output = program(input);
   var endTime = performance.now();
 
   var runtime = Math.round(endTime - startTime);
@@ -124,7 +120,7 @@ function generateInputs(inputType, inputSizes) {
   return inputs;
 }
 
-function getInputSizes(funcDef, funcName, inputType) {
+function getInputSizes(func, inputType) {
   var inputSizes = [];
   var start = 300;
   var interval = 150;
