@@ -1,6 +1,7 @@
 function acceptCode() {
 
   var input = document.getElementById("codeInput").value;
+  var inputArgType = document.getElementById("input-type-selector").value;
 
   // grabs prefix until first ( character, e.g. "function   myFunc   "
   // then grabs second word, i.e. the function name
@@ -9,22 +10,22 @@ function acceptCode() {
   var args = input.substring(input.indexOf("(") + 1, input.indexOf(")")).split(/[, ]+/);
   var numArgs = args.length;
 
-  // for now - one integer argument
+  // for now - one argument
   var output = "Varying argument " + args[0] + ":\n";
 
-  var inputType = "integer";
-  var start = 200;
-  var interval = 150;
-  var numPoints = 10;
   var funcDef = input;
-  var [valsUsed, runtimes] = varyRuntimes(start, interval, numPoints, funcDef, funcName, inputType);
+  var inputSizes = getInputSizes(funcDef, funcName, inputArgType);
+  var inputs = generateInputs(inputArgType, inputSizes);
+  var runtimes = varyRuntimes(funcDef, funcName, inputs);
 
-  for (i = 0; i < numPoints; i++) {
-    output += "For " + args[0] + " = " + valsUsed[i] + ", runtime = " + runtimes[i] + " ms\n";
+  var numInputs = inputSizes.length;
+  // TODO: maybe output actual args used as well
+  for (i = 0; i < numInputs; i++) {
+    output += "For n = " + inputSizes[i] + ", runtime = " + runtimes[i] + " ms\n";
   }
-  document.getElementById("output").innerHTML = "<pre>" + output + "</pre>";
+  outputLine(output);
 
-  var pairedData = parallelArraysToDataPairs(valsUsed, runtimes);
+  var pairedData = parallelArraysToDataPairs(inputSizes, runtimes);
   var complexityData = analyseComplexity(pairedData);
   var graphableData = complexityDataToGraph(pairedData, complexityData);
   drawGraph(graphableData);
@@ -49,31 +50,31 @@ function acceptCode() {
 
 // returns 2-element array of parallel arrays: array of n values used and array of runtimes in milliseconds
 // TODO: do many runs, calculate error, etc
-function varyRuntimes(start, interval, numPoints, funcDef, funcName, inputType) {
-  var valsUsed = [];
+function varyRuntimes(funcDef, funcName, inputs) {
   var runtimes = [];
 
   // register the function in our scope
   // TODO: fix weird scoping issue with this being done by caller
   eval(funcDef);
 
-  for (run = 0; run < numPoints; run++) {
-    var inputSize = start + run * interval;
-    var arg = generateArg(inputSize, inputType);
-    valsUsed.push(arg);
-    var call = buildCallOneArg(funcName, arg);
-    var program = call;
-
-    var startTime = performance.now();
-    var output = eval(program);
-    var endTime = performance.now();
-
-
-    var runtime = Math.round(endTime - startTime);
+  for (var run = 0; run < inputs.length; run++) {
+    var program = buildCallOneArg(funcName, inputs[run]);
+    console.log("Generated call: " + program);
+    var [runtime, output] = timedRun(program);
     runtimes.push(runtime);
   }
 
-  return [valsUsed, runtimes];
+  return runtimes;
+}
+
+// returns [runtime, eval result]
+function timedRun(program) {
+  var startTime = performance.now();
+  var output = eval(program);
+  var endTime = performance.now();
+
+  var runtime = Math.round(endTime - startTime);
+  return [runtime, output];
 }
 
 // returns e.g. myFunc(1024);
@@ -92,7 +93,7 @@ function parallelArraysToDataPairs(xs, ys) {
 }
 
 // TODO: handle input contents contraints, e.g. negative nums in int array? etc
-function generateArg(inputSize, inputType) {
+function generateArgStr(inputSize, inputType) {
   if (inputType === "integer") {
     return inputSize;
   } else if (inputType === "string") {
@@ -103,13 +104,39 @@ function generateArg(inputSize, inputType) {
       var charNum = Math.floor(Math.random() * (range + 1)) + base;
       charArr.push(String.fromCharCode(charNum));
     }
-    return charArr.join("");
+    return "\"" + charArr.join("") + "\"";
   } else if (inputType === "integer-array") {
     var valueUBound = 100;
     var intArr = [];
     for (var i = 0; i < inputSize; i++) {
       intArr.push(Math.floor(Math.random() * valueUBound));
     }
-    return intArr;
+    return "{" + intArr.join(", ") + "}";
   }
+}
+
+function generateInputs(inputType, inputSizes) {
+  var inputs = [];
+  for (var i = 0; i < inputSizes.length; i++) {
+    inputs.push(generateArgStr(inputSizes[i], inputType));
+  }
+
+  return inputs;
+}
+
+function getInputSizes(funcDef, funcName, inputType) {
+  var inputSizes = [];
+  var start = 300;
+  var interval = 150;
+  var numSizes = 12;
+  for (var i = 0; i < numSizes; i++) {
+    inputSizes.push(start + i * interval);
+  }
+  
+  return inputSizes;
+}
+
+function outputLine(text) {
+  var elem = document.getElementById("output");
+  elem.innerHTML = elem.innerHTML + "<pre>" + text + "</pre>";
 }

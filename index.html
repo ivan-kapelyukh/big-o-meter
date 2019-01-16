@@ -20,6 +20,12 @@ function iAmQuadratic(n) {
   return sum;
 }
   </textarea>
+  <p>My input argument is of type:</p>
+  <select id="input-type-selector">
+    <option value="integer">Integer</option>
+    <option value="string">String</option>
+    <option value="integer-array">Integer array</option>
+  </select>
 
   <br/>
   <button onclick="acceptCode()">Analyse</button>
@@ -27,3 +33,27 @@ function iAmQuadratic(n) {
   <div id="chart-div" style="width:500px; height:500px"></div>
   <p id="complexity"></p>
 </body>
+
+<!--
+
+Some fun programs:
+
+function iAmQuadratic(n) {
+  var sum = 0;
+  for (i = 1; i <= n; i++) {
+    for (j = 1; j <= n; j++) {
+      sum = (sum + sum) % 1000000000;
+    }
+  }
+
+  return sum;
+}
+
+function printByChar(str) {
+  for (var i = 0; i < str.length; i++) {
+    console.log(str[i]);
+  }
+}
+
+-->
+
