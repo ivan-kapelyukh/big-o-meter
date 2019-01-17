@@ -43,7 +43,7 @@ function acceptCode() {
   } else if (complexityData.degree == 3) {
     complexityMsg = "cubic";
   } else {
-    complexityMsg = "polynomial of order " + complexity.degree;
+    complexityMsg = "polynomial of order " + complexityData.degree;
   }
 
   document.getElementById("complexity").innerHTML = "Algorithm runtime complexity determined to be " + "<b>" + complexityMsg + "</b>";
@@ -142,13 +142,13 @@ function getInputSizes(func, inputType) {
   endSize = startSize;
   do {
     endSize = Math.ceil(endSize * 1.2);
-    console.log("New end size candidate: " + endSize);
     var input = generateArg(endSize, inputType);
     runtime = timedRun(func, input)[0];
+    console.log("New end size test runtime: " + runtime);
   } while (runtime < TIME_UBOUND);
   console.log("End size: " + endSize);
 
-  var interval = (endSize - startSize) / NUM_SIZES;
+  var interval = Math.ceil((endSize - startSize) / NUM_SIZES);
   for (var i = 0; i < NUM_SIZES; i++) {
     inputSizes.push(startSize + i * interval);
   }
