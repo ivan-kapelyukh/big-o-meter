@@ -123,20 +123,32 @@ function generateInputs(inputType, inputSizes) {
 function getInputSizes(func, inputType) {
   var inputSizes = [];
   var TIME_LBOUND = 80;
-  var TIME_UBOUND = 5000;
+  var TIME_UBOUND = 3500;
+  var TIMEOUT = 5000;
   var NUM_SIZES = 12;
   var startSize = 1 / 2;
+  var endSize;
   var runtime = 0;
 
   // finding min
   do {
-    startSize = Math.ceil(startSize *= 1.5);
+    startSize = Math.ceil(startSize * 1.5);
     var input = generateArg(startSize, inputType);
     runtime = timedRun(func, input)[0];
   } while (runtime < TIME_LBOUND);
   console.log("Start size: " + startSize);
 
-  var interval = 150;
+  // finding max
+  endSize = startSize;
+  do {
+    endSize = Math.ceil(endSize * 1.2);
+    console.log("New end size candidate: " + endSize);
+    var input = generateArg(endSize, inputType);
+    runtime = timedRun(func, input)[0];
+  } while (runtime < TIME_UBOUND);
+  console.log("End size: " + endSize);
+
+  var interval = (endSize - startSize) / NUM_SIZES;
   for (var i = 0; i < NUM_SIZES; i++) {
     inputSizes.push(startSize + i * interval);
   }
