@@ -13,10 +13,11 @@ function acceptCode() {
   // for now - one argument
   var output = "Varying argument " + args[0] + ":\n";
 
-  var funcDef = input;
-  var inputSizes = getInputSizes(funcDef, funcName, inputArgType);
+  eval("var func = " + input);
+
+  var inputSizes = getInputSizes(func, inputArgType);
   var inputs = generateInputs(inputArgType, inputSizes);
-  var runtimes = varyRuntimes(funcDef, funcName, inputs);
+  var runtimes = varyRuntimes(func, inputs);
 
   var numInputs = inputSizes.length;
   // TODO: maybe output actual args used as well
@@ -50,17 +51,12 @@ function acceptCode() {
 
 // returns 2-element array of parallel arrays: array of n values used and array of runtimes in milliseconds
 // TODO: do many runs, calculate error, etc
-function varyRuntimes(funcDef, funcName, inputs) {
+function varyRuntimes(func, inputs) {
   var runtimes = [];
 
-  // register the function in our scope
-  // TODO: fix weird scoping issue with this being done by caller
-  eval(funcDef);
-
   for (var run = 0; run < inputs.length; run++) {
-    var program = buildCallOneArg(funcName, inputs[run]);
-    console.log("Generated call: " + program);
-    var [runtime, output] = timedRun(program);
+    // console.log("Generated call: " + program);
+    var [runtime, output] = timedRun(func, inputs[run]);
     runtimes.push(runtime);
   }
 
@@ -68,9 +64,9 @@ function varyRuntimes(funcDef, funcName, inputs) {
 }
 
 // returns [runtime, eval result]
-function timedRun(program) {
+function timedRun(program, input) {
   var startTime = performance.now();
-  var output = eval(program);
+  var output = program(input);
   var endTime = performance.now();
 
   var runtime = Math.round(endTime - startTime);
@@ -93,7 +89,7 @@ function parallelArraysToDataPairs(xs, ys) {
 }
 
 // TODO: handle input contents contraints, e.g. negative nums in int array? etc
-function generateArgStr(inputSize, inputType) {
+function generateArg(inputSize, inputType) {
   if (inputType === "integer") {
     return inputSize;
   } else if (inputType === "string") {
@@ -104,33 +100,57 @@ function generateArgStr(inputSize, inputType) {
       var charNum = Math.floor(Math.random() * (range + 1)) + base;
       charArr.push(String.fromCharCode(charNum));
     }
-    return "\"" + charArr.join("") + "\"";
+    return charArr.join("");
   } else if (inputType === "integer-array") {
     var valueUBound = 100;
     var intArr = [];
     for (var i = 0; i < inputSize; i++) {
       intArr.push(Math.floor(Math.random() * valueUBound));
     }
-    return "{" + intArr.join(", ") + "}";
+    return intArr;
   }
 }
 
 function generateInputs(inputType, inputSizes) {
   var inputs = [];
   for (var i = 0; i < inputSizes.length; i++) {
-    inputs.push(generateArgStr(inputSizes[i], inputType));
+    inputs.push(generateArg(inputSizes[i], inputType));
   }
 
   return inputs;
 }
 
-function getInputSizes(funcDef, funcName, inputType) {
+function getInputSizes(func, inputType) {
   var inputSizes = [];
-  var start = 300;
-  var interval = 150;
-  var numSizes = 12;
-  for (var i = 0; i < numSizes; i++) {
-    inputSizes.push(start + i * interval);
+  var TIME_LBOUND = 80;
+  var TIME_UBOUND = 3500;
+  var TIMEOUT = 5000;
+  var NUM_SIZES = 12;
+  var startSize = 1 / 2;
+  var endSize;
+  var runtime = 0;
+
+  // finding min
+  do {
+    startSize = Math.ceil(startSize * 1.5);
+    var input = generateArg(startSize, inputType);
+    runtime = timedRun(func, input)[0];
+  } while (runtime < TIME_LBOUND);
+  console.log("Start size: " + startSize);
+
+  // finding max
+  endSize = startSize;
+  do {
+    endSize = Math.ceil(endSize * 1.2);
+    console.log("New end size candidate: " + endSize);
+    var input = generateArg(endSize, inputType);
+    runtime = timedRun(func, input)[0];
+  } while (runtime < TIME_UBOUND);
+  console.log("End size: " + endSize);
+
+  var interval = (endSize - startSize) / NUM_SIZES;
+  for (var i = 0; i < NUM_SIZES; i++) {
+    inputSizes.push(startSize + i * interval);
   }
   
   return inputSizes;
