@@ -89,7 +89,7 @@ function parallelArraysToDataPairs(xs, ys) {
 }
 
 // TODO: handle input contents contraints, e.g. negative nums in int array? etc
-function generateArgStr(inputSize, inputType) {
+function generateArg(inputSize, inputType) {
   if (inputType === "integer") {
     return inputSize;
   } else if (inputType === "string") {
@@ -107,14 +107,14 @@ function generateArgStr(inputSize, inputType) {
     for (var i = 0; i < inputSize; i++) {
       intArr.push(Math.floor(Math.random() * valueUBound));
     }
-    return "{" + intArr.join(", ") + "}";
+    return intArr;
   }
 }
 
 function generateInputs(inputType, inputSizes) {
   var inputs = [];
   for (var i = 0; i < inputSizes.length; i++) {
-    inputs.push(generateArgStr(inputSizes[i], inputType));
+    inputs.push(generateArg(inputSizes[i], inputType));
   }
 
   return inputs;
