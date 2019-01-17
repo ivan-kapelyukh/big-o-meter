@@ -100,7 +100,7 @@ function generateArg(inputSize, inputType) {
       var charNum = Math.floor(Math.random() * (range + 1)) + base;
       charArr.push(String.fromCharCode(charNum));
     }
-    return "\"" + charArr.join("") + "\"";
+    return charArr.join("");
   } else if (inputType === "integer-array") {
     var valueUBound = 100;
     var intArr = [];
@@ -122,11 +122,23 @@ function generateInputs(inputType, inputSizes) {
 
 function getInputSizes(func, inputType) {
   var inputSizes = [];
-  var start = 300;
+  var TIME_LBOUND = 80;
+  var TIME_UBOUND = 5000;
+  var NUM_SIZES = 12;
+  var startSize = 1 / 2;
+  var runtime = 0;
+
+  // finding min
+  do {
+    startSize = Math.ceil(startSize *= 1.5);
+    var input = generateArg(startSize, inputType);
+    runtime = timedRun(func, input)[0];
+  } while (runtime < TIME_LBOUND);
+  console.log("Start size: " + startSize);
+
   var interval = 150;
-  var numSizes = 12;
-  for (var i = 0; i < numSizes; i++) {
-    inputSizes.push(start + i * interval);
+  for (var i = 0; i < NUM_SIZES; i++) {
+    inputSizes.push(startSize + i * interval);
   }
   
   return inputSizes;
