@@ -1,9 +1,9 @@
 // takes array of pair arrays, e.g. [[n1, t1], ..., [nm, tm]]
 // returns complexityData object:
-  // type: "exponential", "polynomial"
-  // degree: 0, 1, 2, ... (undefined if type is not polynomial)
-  // bestExpCurve: expCurve object with fields k, c
-  // bestPolyCurve: polyCurve object with fields k, n
+// type: "exponential", "polynomial"
+// degree: 0, 1, 2, ... (undefined if type is not polynomial)
+// bestExpCurve: expCurve object with fields k, c
+// bestPolyCurve: polyCurve object with fields k, n
 function analyseComplexity(data) {
   var complexity = {};
 
@@ -62,13 +62,13 @@ function getExpCurve(data) {
 }
 
 // TODO: what if actual best curve have x^3 + x^2, but x^3 has v. small coeff?
-  // need to look at big n
+// need to look at big n
 
 // polyCurve has form: y = k * x ^ n, so has fields k, n
 // TODO: can try handling fractional powers at some point
 function getPolyCurve(data) {
   var polyCurve = {};
-  var powerResult = fitPower(data, {precision: 10}).equation;
+  var powerResult = fitPower(data, { precision: 10 }).equation;
   polyCurve.k = powerResult[0];
   polyCurve.n = powerResult[1];
   // var dataLogified = data.map(([n, t]) => ([Math.log2(n), Math.log2(t)]));
@@ -85,7 +85,7 @@ function getPolyCurve(data) {
 function getBestFitLine(data) {
   var line = {};
 
-  var result = linearRegression(data, {precision: 10});
+  var result = linearRegression(data, { precision: 10 });
   line.m = result.equation[0];
   line.c = result.equation[1];
 
@@ -108,7 +108,7 @@ function getR2(curveType, curve, data) {
     var y = data[i][1];
     var predicted = getPredictionForX(curveType, curve, x);
     // if (curveType === "exponential")
-      // console.log("For point " + x + ", actual: " + y + ", prediction: " + predicted);
+    // console.log("For point " + x + ", actual: " + y + ", prediction: " + predicted);
     ssTotal += Math.pow(y - yMean, 2);
     ssResidual += Math.pow(y - predicted, 2);
   }
@@ -133,9 +133,9 @@ function getPredictionForX(curveType, curve, x) {
 function complexityDataToGraph(runData, complexityData) {
   var graphData = [];
   var hLabel = "Input size";
-  var v1Label = "Actual runtime (ms)";
-  var v2Label = "Exponential predicted runtime (ms)";
-  var v3Label = "Polynomial predicted runtime (ms)";
+  var v1Label = "Actual";
+  var v2Label = "Exponential predicted";
+  var v3Label = "Polynomial predicted";
   graphData.push([hLabel, v1Label, v2Label, v3Label]);
 
   var n = runData.length;

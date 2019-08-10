@@ -5,7 +5,7 @@
   *
   * copyright(c) 2013 Tom Alexander
   * Licensed under the MIT license.
-  * 
+  *
   * (with some modifications tailored to this project)
 
 */

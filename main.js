@@ -153,7 +153,7 @@ function getInputSizes(func, inputType) {
   for (var i = 0; i < NUM_SIZES; i++) {
     inputSizes.push(startSize + i * interval);
   }
-  
+
   return inputSizes;
 }
 

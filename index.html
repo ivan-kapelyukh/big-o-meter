@@ -1,15 +1,15 @@
 <head>
-    <title>Project Turing</title>
-    <!--TODO: include security hash-->
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" src="regression.js"></script>
-    <script type="text/javascript" src="graph.js"></script>
-    <script type="text/javascript" src="complexity.js"></script>
-    <script type="text/javascript" src="main.js"></script>
+  <title>Project Turing</title>
+  <!--TODO: include security hash-->
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="regression.js"></script>
+  <script type="text/javascript" src="graph.js"></script>
+  <script type="text/javascript" src="complexity.js"></script>
+  <script type="text/javascript" src="main.js"></script>
 </head>
 
 <body>
-    <textarea placeholder="Code to be analysed goes here" id="codeInput" rows="10" cols="80">
+  <textarea placeholder="Code to be analysed goes here" id="codeInput" rows="10" cols="80">
 function iAmQuadratic(n) {
     var sum = 0;
     for (i = 1; i <= n; i++) {
@@ -20,18 +20,18 @@ function iAmQuadratic(n) {
     return sum;
 }
   </textarea>
-    <p>My input argument is of type:</p>
-    <select id="input-type-selector">
-        <option value="integer">Integer</option>
-        <option value="string">String</option>
-        <option value="integer-array">Integer array</option>
-    </select>
+  <p>My input argument is of type:</p>
+  <select id="input-type-selector">
+    <option value="integer">Integer</option>
+    <option value="string">String</option>
+    <option value="integer-array">Integer array</option>
+  </select>
 
-    <br />
-    <button onclick="acceptCode()">Analyse</button>
-    <p id="output"></p>
-    <div id="chart-div" style="width:500px; height:500px"></div>
-    <p id="complexity"></p>
+  <br />
+  <button onclick="acceptCode()">Analyse</button>
+  <p id="output"></p>
+  <div id="chart-div" style="width:800px; height:600px"></div>
+  <p id="complexity"></p>
 </body>
 
 <!--
