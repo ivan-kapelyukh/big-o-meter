@@ -1,19 +1,27 @@
 * {
   color: white;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 400;
 }
 
 .code-input {
   background-color: rgba(0, 0, 0, 0);
   border: none;
+  font-family: 'Roboto Mono', monospace;
+  resize: none;
 }
 
 textarea:focus {
   outline: none;
 }
 
+::placeholder {
+  color: #e7dce1;
+}
+
 body {
   background: linear-gradient(to bottom, #d964d8, #4617d3) fixed;
-  overflow: hidden; /* Hides vertical scroll bar */
+  /* overflow: hidden; */
 }
 
 .center-col {
@@ -21,12 +29,15 @@ body {
 }
 
 .title {
-  padding-top: 100px;
+  padding-top: 80px;
+  padding-bottom: 50px;
   color: white;
+  font-weight: 500;
+  font-size: 40px;
 }
 
 button.primary {
-  margin-top: 50px;
+  margin-top: 80px;
   padding-top: 15px;
   padding-bottom: 15px;
   padding-left: 25px;

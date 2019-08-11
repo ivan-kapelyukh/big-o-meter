@@ -7,12 +7,14 @@
   <script type="text/javascript" src="complexity.js"></script>
   <script type="text/javascript" src="main.js"></script>
   <link rel="stylesheet" type="text/css" href="main.css" />
+  <link href="https://fonts.googleapis.com/css?family=Quicksand:400,500|Roboto+Mono&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <div class="center-col">
     <h1 class="title">Project Turing</h1>
-    <textarea placeholder="Code to be analysed goes here" id="codeInput" rows="10" cols="80" class="code-input">
+    <textarea placeholder="Code to be analysed goes here" id="codeInput" rows="10" cols="80" class="code-input"
+      spellcheck="false">
 function iAmQuadratic(n) {
     var sum = 0;
     for (i = 1; i <= n; i++) {
@@ -23,8 +25,9 @@ function iAmQuadratic(n) {
     return sum;
 }
   </textarea>
-    <p>My input argument is of type:</p>
-    <select id="input-type-selector">
+    <!-- TODO: readd -->
+    <!-- <p>My input argument is of type:</p> -->
+    <select id="input-type-selector" style="display: none">
       <option value="integer">Integer</option>
       <option value="string">String</option>
       <option value="integer-array">Integer array</option>

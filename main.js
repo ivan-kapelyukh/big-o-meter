@@ -1,7 +1,8 @@
 function acceptCode() {
 
   var input = document.getElementById("codeInput").value;
-  var inputArgType = document.getElementById("input-type-selector").value;
+  const inputArgType = document.getElementById("input-type-selector").value;
+  const argType = inputArgType ? inputArgType : 'integer';
 
   // grabs prefix until first ( character, e.g. "function   myFunc   "
   // then grabs second word, i.e. the function name
@@ -15,8 +16,8 @@ function acceptCode() {
 
   eval("var func = " + input);
 
-  var inputSizes = getInputSizes(func, inputArgType);
-  var inputs = generateInputs(inputArgType, inputSizes);
+  var inputSizes = getInputSizes(func, argType);
+  var inputs = generateInputs(argType, inputSizes);
   var runtimes = varyRuntimes(func, inputs);
 
   var numInputs = inputSizes.length;
