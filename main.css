@@ -1,14 +1,20 @@
 * {
-  color: white;
+  color: #fef0f4;
   font-family: 'Quicksand', sans-serif;
   font-weight: 400;
 }
 
 .code-input {
-  background-color: rgba(0, 0, 0, 0);
+  background: linear-gradient(to right, #fef0f4, #fef0f4, #fdb7cb);
+  border-radius: 15px;
+  /* box-shadow: 3px 5px 2px #493657; Shadow: to have or not to have? */
   border: none;
-  font-family: 'Roboto Mono', monospace;
+  padding: 15px;
+  font-size: 18px;
+  font-family: 'Ubuntu Mono', monospace;
   resize: none;
+  color: #FF1053;
+  width: 50%;
 }
 
 textarea:focus {
@@ -31,7 +37,7 @@ body {
 .title {
   padding-top: 80px;
   padding-bottom: 50px;
-  color: white;
+  color: #fef0f4;
   font-weight: 500;
   font-size: 40px;
 }
@@ -55,5 +61,5 @@ button:focus {
 
 button:hover {
   box-shadow: 0 0 8px #fc618e;
-  transition: 1s;
+  transition: 0.5s;
 }
