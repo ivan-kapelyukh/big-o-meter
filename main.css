@@ -20,7 +20,7 @@ textarea:focus {
 }
 
 body {
-  background: linear-gradient(to bottom, #d964d8, #4617d3) fixed;
+  background: linear-gradient(to bottom, #fc618e, #d964d8, #4617d3) fixed;
   /* overflow: hidden; */
 }
 
@@ -51,4 +51,9 @@ button.primary {
 
 button:focus {
   outline: none;
+}
+
+button:hover {
+  box-shadow: 0 0 8px #fc618e;
+  transition: 1s;
 }
