@@ -53,6 +53,7 @@ button.primary {
   border: 0;
   font-size: 24px;
   border-radius: 15px;
+  cursor: pointer;
 }
 
 button:focus {
