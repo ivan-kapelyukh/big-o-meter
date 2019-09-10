@@ -1,14 +1,15 @@
 function acceptCode() {
-
-  var input = document.getElementById("codeInput").value;
+  var input = document.getElementById("editor").value;
   const inputArgType = document.getElementById("input-type-selector").value;
-  const argType = inputArgType ? inputArgType : 'integer';
+  const argType = inputArgType ? inputArgType : "integer";
 
   // grabs prefix until first ( character, e.g. "function   myFunc   "
   // then grabs second word, i.e. the function name
   var funcName = input.substring(0, input.indexOf("(")).split(/\s+/)[1];
 
-  var args = input.substring(input.indexOf("(") + 1, input.indexOf(")")).split(/[, ]+/);
+  var args = input
+    .substring(input.indexOf("(") + 1, input.indexOf(")"))
+    .split(/[, ]+/);
   var numArgs = args.length;
 
   // for now - one argument
@@ -23,7 +24,8 @@ function acceptCode() {
   var numInputs = inputSizes.length;
   // TODO: maybe output actual args used as well
   for (i = 0; i < numInputs; i++) {
-    output += "For n = " + inputSizes[i] + ", runtime = " + runtimes[i] + " ms\n";
+    output +=
+      "For n = " + inputSizes[i] + ", runtime = " + runtimes[i] + " ms\n";
   }
   outputLine(output);
 
@@ -47,7 +49,11 @@ function acceptCode() {
     complexityMsg = "polynomial of order " + complexityData.degree;
   }
 
-  document.getElementById("complexity").innerHTML = "Algorithm runtime complexity determined to be " + "<b>" + complexityMsg + "</b>";
+  document.getElementById("complexity").innerHTML =
+    "Algorithm runtime complexity determined to be " +
+    "<b>" +
+    complexityMsg +
+    "</b>";
 }
 
 // returns 2-element array of parallel arrays: array of n values used and array of runtimes in milliseconds
@@ -95,8 +101,8 @@ function generateArg(inputSize, inputType) {
     return inputSize;
   } else if (inputType === "string") {
     var charArr = [];
-    var base = 'a'.charCodeAt(0)
-    var range = 'z'.charCodeAt(0) - base;
+    var base = "a".charCodeAt(0);
+    var range = "z".charCodeAt(0) - base;
     for (var i = 0; i < inputSize; i++) {
       var charNum = Math.floor(Math.random() * (range + 1)) + base;
       charArr.push(String.fromCharCode(charNum));
@@ -136,7 +142,9 @@ function getInputSizes(func, inputType) {
     startSize = Math.ceil(startSize * 1.5);
     var input = generateArg(startSize, inputType);
     runtime = timedRun(func, input)[0];
-    console.log("New start size test size: " + startSize + ", runtime: " + runtime);
+    console.log(
+      "New start size test size: " + startSize + ", runtime: " + runtime
+    );
   } while (runtime < TIME_LBOUND);
   console.log("Start size: " + startSize);
 
