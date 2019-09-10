@@ -1,30 +1,72 @@
 <head>
   <title>Project Turing</title>
   <!--TODO: include security hash-->
-  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <link
+    href="https://fonts.googleapis.com/css?family=Quicksand:400,500|Ubuntu+Mono:400&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" type="text/css" href="main.css" />
+
+  <script
+    type="text/javascript"
+    src="https://www.gstatic.com/charts/loader.js"
+  ></script>
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/ace.js"
+    integrity="sha256-CVkji/u32aj2TeC+D13f7scFSIfphw2pmu4LaKWMSY8="
+    crossorigin="anonymous"
+  ></script>
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/mode-javascript.js"
+    integrity="sha256-9nVHCZW1SuyhaVgqmPk1XutGn+g/ASVBiVAheioldo4="
+    crossorigin="anonymous"
+  ></script>
+
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.6/theme-xcode.js"
+    integrity="sha256-jLrBzcgtXmwiAviu7yWHnlKYsdjqI5d7r5dEOlfaTW4="
+    crossorigin="anonymous"
+  ></script>
+
   <script type="text/javascript" src="regression.js"></script>
   <script type="text/javascript" src="graph.js"></script>
   <script type="text/javascript" src="complexity.js"></script>
   <script type="text/javascript" src="main.js"></script>
-  <link rel="stylesheet" type="text/css" href="main.css" />
-  <link href="https://fonts.googleapis.com/css?family=Quicksand:400,500|Ubuntu+Mono:400&display=swap" rel="stylesheet">
 </head>
 
 <body>
   <div class="center-col">
     <h1 class="title">Project Turing</h1>
-    <textarea placeholder="Code to be analysed goes here" id="codeInput" rows="10" cols="80" class="code-input"
-      spellcheck="false">
-function iAmQuadratic(n) {
-    var sum = 0;
-    for (i = 1; i <= n; i++) {
-        for (j = 1; j <= n; j++) {
-          sum = (sum + sum) % 1000000000;
-        }
+    <!-- prettier-ignore -->
+    <div id="editor">function iAmQuadratic(n) {
+  var sum = 0;
+  for (i = 1; i <= n; i++) {
+    for (j = 1; j <= n; j++) {
+      sum = (sum + sum) % 1000000000;
     }
-    return sum;
-}
-  </textarea>
+  }
+
+  return sum;
+}</div>
+
+    <script>
+      var editor = ace.edit("editor");
+      editor.setTheme("ace/theme/xcode");
+      editor.session.setMode("ace/mode/javascript");
+      editor.setOptions({
+        fontFamily: "Ubuntu Mono",
+        fontSize: "20px",
+        useSoftTabs: true,
+        navigateWithinSoftTabs: true,
+        tabSize: 2,
+        showFoldWidgets: false
+      });
+
+      editor.focus();
+    </script>
+
     <!-- TODO: readd -->
     <!-- <p>My input argument is of type:</p> -->
     <select id="input-type-selector" style="display: none">
