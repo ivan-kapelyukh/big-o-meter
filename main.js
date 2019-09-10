@@ -1,3 +1,23 @@
+window.onload = function() {
+  setUpEditor();
+};
+
+function setUpEditor() {
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/xcode");
+  editor.session.setMode("ace/mode/javascript");
+  editor.setOptions({
+    fontFamily: "Ubuntu Mono",
+    fontSize: "20px",
+    useSoftTabs: true,
+    navigateWithinSoftTabs: true,
+    tabSize: 2,
+    showFoldWidgets: false
+  });
+
+  editor.focus();
+}
+
 function acceptCode() {
   var input = document.getElementById("editor").value;
   const inputArgType = document.getElementById("input-type-selector").value;
