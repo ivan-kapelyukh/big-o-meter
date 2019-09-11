@@ -4,6 +4,8 @@
 // degree: 0, 1, 2, ... (undefined if type is not polynomial)
 // bestExpCurve: expCurve object with fields k, c
 // bestPolyCurve: polyCurve object with fields k, n
+// order: string message such as "quadratic" or "exponential"
+
 function analyseComplexity(data) {
   var complexity = {};
 
@@ -15,7 +17,7 @@ function analyseComplexity(data) {
   }
 
   var testing = [];
-  var training = []
+  var training = [];
   for (var i = 0; i < third; i++) {
     training.push(data[i]);
   }
@@ -47,13 +49,27 @@ function analyseComplexity(data) {
     complexity.degree = Math.round(polyCurve.n);
   }
 
+  const polynomialMap = new Map();
+  polynomialMap.set(0, "constant");
+  polynomialMap.set(1, "linear");
+  polynomialMap.set(2, "quadratic");
+  polynomialMap.set(3, "cubic");
+
+  if (complexity.exponential) {
+    complexity.order = "exponential";
+  } else if (complexity.degree > 3) {
+    complexity.order = "polynomial of order " + complexity.degree;
+  } else {
+    complexity.order = polynomialMap.get(complexity.degree);
+  }
+
   return complexity;
 }
 
 // expCurve has form: y = k * 2 ^ (c * x), so has fields k, c
 function getExpCurve(data) {
   var expCurve = {};
-  var dataLogifiedT = data.map(([n, t]) => ([n, Math.log2(t)]));
+  var dataLogifiedT = data.map(([n, t]) => [n, Math.log2(t)]);
   var bestFitLine = getBestFitLine(dataLogifiedT);
   expCurve.c = bestFitLine.m;
   expCurve.k = Math.pow(2, bestFitLine.c);
@@ -114,7 +130,7 @@ function getR2(curveType, curve, data) {
   }
 
   // console.log("ssRes: " + ssResidual + ", ssTot: " + ssTotal);
-  return 1 - (ssResidual / ssTotal);
+  return 1 - ssResidual / ssTotal;
 }
 
 function getPredictionForX(curveType, curve, x) {
@@ -142,8 +158,16 @@ function complexityDataToGraph(runData, complexityData) {
   for (var i = 0; i < n; i++) {
     var inputSize = runData[i][0];
     var actualRuntime = runData[i][1];
-    var expPrediction = getPredictionForX("exponential", complexityData.expCurve, inputSize);
-    var polyPrediction = getPredictionForX("polynomial", complexityData.polyCurve, inputSize);
+    var expPrediction = getPredictionForX(
+      "exponential",
+      complexityData.expCurve,
+      inputSize
+    );
+    var polyPrediction = getPredictionForX(
+      "polynomial",
+      complexityData.polyCurve,
+      inputSize
+    );
     graphData.push([inputSize, actualRuntime, expPrediction, polyPrediction]);
   }
 

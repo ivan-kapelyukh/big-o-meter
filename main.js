@@ -18,32 +18,35 @@ function setUpEditor() {
   editor.focus();
 }
 
-function acceptCode() {
-  var input = document.getElementById("editor").value;
+function analyseCode() {
+  var wholeInput = ace.edit("editor").getValue();
   const inputArgType = document.getElementById("input-type-selector").value;
-  const argType = inputArgType ? inputArgType : "integer";
+  const DEFAULT_ARG_TYPE = "integer";
+  const argType = inputArgType ? inputArgType : DEFAULT_ARG_TYPE;
 
-  // grabs prefix until first ( character, e.g. "function   myFunc   "
+  // Grabs prefix until first ( character, e.g. "function   myFunc   "
   // then grabs second word, i.e. the function name
-  var funcName = input.substring(0, input.indexOf("(")).split(/\s+/)[1];
+  var funcName = wholeInput
+    .substring(0, wholeInput.indexOf("("))
+    .split(/\s+/)[1];
 
-  var args = input
-    .substring(input.indexOf("(") + 1, input.indexOf(")"))
+  // Gets arg list from function call
+  var args = wholeInput
+    .substring(wholeInput.indexOf("(") + 1, wholeInput.indexOf(")"))
     .split(/[, ]+/);
-  var numArgs = args.length;
 
-  // for now - one argument
+  // For now - one argument
   var output = "Varying argument " + args[0] + ":\n";
 
-  eval("var func = " + input);
+  // Declaring function in this scope
+  eval("var func = " + wholeInput);
 
   var inputSizes = getInputSizes(func, argType);
   var inputs = generateInputs(argType, inputSizes);
-  var runtimes = varyRuntimes(func, inputs);
+  var runtimes = measureRuntimes(func, inputs);
 
-  var numInputs = inputSizes.length;
-  // TODO: maybe output actual args used as well
-  for (i = 0; i < numInputs; i++) {
+  // TODO: maybe output actual args used as well, for debugging
+  for (i = 0; i < inputSizes.length; i++) {
     output +=
       "For n = " + inputSizes[i] + ", runtime = " + runtimes[i] + " ms\n";
   }
@@ -54,31 +57,16 @@ function acceptCode() {
   var graphableData = complexityDataToGraph(pairedData, complexityData);
   drawGraph(graphableData);
 
-  var complexityMsg;
-  if (complexityData.exponential) {
-    complexityMsg = "exponential";
-  } else if (complexityData.degree == 0) {
-    complexityMsg = "constant";
-  } else if (complexityData.degree == 1) {
-    complexityMsg = "linear";
-  } else if (complexityData.degree == 2) {
-    complexityMsg = "quadratic";
-  } else if (complexityData.degree == 3) {
-    complexityMsg = "cubic";
-  } else {
-    complexityMsg = "polynomial of order " + complexityData.degree;
-  }
-
   document.getElementById("complexity").innerHTML =
     "Algorithm runtime complexity determined to be " +
     "<b>" +
-    complexityMsg +
+    complexityData.order +
     "</b>";
 }
 
 // returns 2-element array of parallel arrays: array of n values used and array of runtimes in milliseconds
 // TODO: do many runs, calculate error, etc
-function varyRuntimes(func, inputs) {
+function measureRuntimes(func, inputs) {
   var runtimes = [];
 
   for (var run = 0; run < inputs.length; run++) {
@@ -100,7 +88,7 @@ function timedRun(program, input) {
   return [runtime, output];
 }
 
-// returns e.g. myFunc(1024);
+// returns e.g. 'myFunc(1024);'
 function buildCallOneArg(funcName, arg) {
   return funcName + "(" + arg + ");";
 }
