@@ -4,13 +4,13 @@ import App from "./App";
 
 test("extracts normal function name", () => {
   const code = "function makesFour() { return 2 + 2; }";
-  const funcName = App.extractFuncName(code);
+  const funcName = App.extractName(code);
   expect(funcName).toBe("makesFour");
 });
 
 test("extracts name with weird spacing", () => {
   const code = " function  makesSix  () { return 6 + 1; }";
-  const funcName = App.extractFuncName(code);
+  const funcName = App.extractName(code);
   expect(funcName).toBe("makesSix");
 });
 
@@ -25,6 +25,14 @@ test("extracts simple function body", () => {
     const three = 3;
     return one + three;
   `;
-  const body = App.extractFuncBody(code);
+  const body = App.extractBody(code);
   expect(body).toBe(expectedBody);
+});
+
+test("extracts argument name", () => {
+  const code = `function sayHelloTo(name) {
+    console.log("Hello " + name);
+  }`;
+  const argument = App.extractArgument(code);
+  expect(argument).toBe("name");
 });
