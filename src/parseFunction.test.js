@@ -1,17 +1,28 @@
-import React from "react";
-import { render } from "@testing-library/react";
-import App from "./App";
+import {
+  parseFunction,
+  parseName,
+  parseArgument,
+  parseBody,
+} from "./parseFunction.js";
 
 test("extracts normal function name", () => {
   const code = "function makesFour() { return 2 + 2; }";
-  const funcName = App.extractName(code);
+  const funcName = parseName(code);
   expect(funcName).toBe("makesFour");
 });
 
 test("extracts name with weird spacing", () => {
   const code = " function  makesSix  () { return 6 + 1; }";
-  const funcName = App.extractName(code);
+  const funcName = parseName(code);
   expect(funcName).toBe("makesSix");
+});
+
+test("extracts argument name", () => {
+  const code = `function sayHelloTo(name) {
+    console.log("Hello " + name);
+  }`;
+  const argument = parseArgument(code);
+  expect(argument).toBe("name");
 });
 
 test("extracts simple function body", () => {
@@ -25,14 +36,13 @@ test("extracts simple function body", () => {
     const three = 3;
     return one + three;
   `;
-  const body = App.extractBody(code);
+  const body = parseBody(code);
   expect(body).toBe(expectedBody);
 });
 
-test("extracts argument name", () => {
-  const code = `function sayHelloTo(name) {
-    console.log("Hello " + name);
-  }`;
-  const argument = App.extractArgument(code);
-  expect(argument).toBe("name");
-});
+/* TODO:
+
+Robustness testing on user input: e.g. comment after function contatining '}' character
+Handle multiple arguments
+
+*/

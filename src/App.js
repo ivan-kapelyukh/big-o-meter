@@ -1,6 +1,11 @@
 import React from "react";
 import "./App.css";
-import { analyseCode } from "./functionAnalysis.js";
+import {
+  parseFunction,
+  parseName,
+  parseArgument,
+  parseBody,
+} from "./parseFunction.js";
 
 class App extends React.Component {
   render() {
@@ -11,35 +16,15 @@ class App extends React.Component {
 
         <br />
 
-        <button onclick="codeSubmitted()">Analyse</button>
+        <button onClick={this.codeSubmitted}>Analyse</button>
       </div>
     );
   }
 
-  static codeSubmitted() {
-    const code = document.getElementById("editor").getValue();
-    const funcName = App.extractName(code);
-  }
-
-  static extractName(code) {
-    // Get last word before opening bracket.
-    return code.substring(0, code.indexOf("(")).trim().split(" ").pop();
-  }
-
-  static extractBody(code) {
-    return code.substring(code.indexOf("{") + 1, code.lastIndexOf("}"));
-  }
-
-  static extractArgument(code) {
-    return code.substring(code.indexOf("(") + 1, code.indexOf(")")).trim();
+  codeSubmitted() {
+    const code = document.getElementById("editor").value;
+    const fn = parseFunction(code);
   }
 }
 
 export default App;
-
-/* TODO:
-
-Robustness testing on user input: e.g. comment after function contatining '}' character
-Handle multiple arguments
-
-*/
