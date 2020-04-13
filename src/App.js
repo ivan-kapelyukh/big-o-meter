@@ -25,6 +25,16 @@ class App extends React.Component {
     // Get last word before opening bracket.
     return code.substring(0, code.indexOf("(")).trim().split(" ").pop();
   }
+
+  static extractFuncBody(code) {
+    return code.substring(code.indexOf("{") + 1, code.lastIndexOf("}"));
+  }
 }
 
 export default App;
+
+/* TODO:
+
+Robustness testing on user input: e.g. comment after function contatining '}' character
+
+*/

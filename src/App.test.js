@@ -13,3 +13,18 @@ test("extracts name with weird spacing", () => {
   const funcName = App.extractFuncName(code);
   expect(funcName).toBe("makesSix");
 });
+
+test("extracts simple function body", () => {
+  const code = `function makesFour() {
+    const one = 1;
+    const three = 3;
+    return one + three;
+  }`;
+  const expectedBody = `
+    const one = 1;
+    const three = 3;
+    return one + three;
+  `;
+  const body = App.extractFuncBody(code);
+  expect(body).toBe(expectedBody);
+});
