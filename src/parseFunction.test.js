@@ -40,6 +40,16 @@ test("extracts simple function body", () => {
   expect(body).toBe(expectedBody);
 });
 
+test("parses simple function", () => {
+  const code = `function addsFour(number) {
+    const four = 4;
+    return number + 4;
+  }`;
+  const fn = parseFunction(code);
+  const result = fn.call(this, 6);
+  expect(result).toBe(10);
+});
+
 /* TODO:
 
 Robustness testing on user input: e.g. comment after function contatining '}' character

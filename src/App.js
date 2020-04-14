@@ -16,12 +16,12 @@ class App extends React.Component {
 
         <br />
 
-        <button onClick={this.codeSubmitted}>Analyse</button>
+        <button onClick={this.analyseCode}>Analyse</button>
       </div>
     );
   }
 
-  codeSubmitted() {
+  analyseCode() {
     const code = document.getElementById("editor").value;
     const fn = parseFunction(code);
   }
