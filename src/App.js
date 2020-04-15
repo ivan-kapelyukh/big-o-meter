@@ -27,9 +27,11 @@ class App extends React.Component {
         <br />
 
         <div className="row">
-          <textarea id="editor" className="bubble">
-            {App.defaultCode}
-          </textarea>
+          <textarea
+            id="editor"
+            className="bubble"
+            defaultValue={App.defaultCode}
+          ></textarea>
           <p id="log" className="bubble"></p>
         </div>
 
@@ -43,13 +45,12 @@ class App extends React.Component {
   analyseCode = () => {
     const code = document.getElementById("editor").value;
     const fn = parseFunction(code);
-    const result = analyseFunction(fn);
-    this.logResult(result);
+    console.log(fn);
+    analyseFunction(fn, this.addToLog);
   };
 
-  logResult = (result) => {
-    document.getElementById("log").textContent +=
-      "Function gave result: " + result;
+  addToLog = (entry) => {
+    document.getElementById("log").textContent += entry + "\n";
   };
 }
 
