@@ -1,3 +1,25 @@
 .App {
   text-align: center;
 }
+
+.row {
+  display: flex;
+  justify-content: center;
+  height: 60vh;
+}
+
+#editor {
+  resize: none;
+}
+
+.bubble {
+  width: 40vw;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#log {
+  border: 1px solid;
+}

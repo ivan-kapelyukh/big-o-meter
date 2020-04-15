@@ -7,12 +7,31 @@ import {
   parseBody,
 } from "./parseFunction.js";
 
+import { analyseFunction } from "./analyseFunction.js";
+
 class App extends React.Component {
+  static defaultCode = `function sumTo(n) {
+    let sum = 0;
+    for (let i = 1; i <= n; i++) {
+      sum += i;
+    }
+
+    return sum;
+}`;
+
   render() {
     return (
       <div className="App">
         <p>Hello there!</p>
-        <textarea id="editor" rows="20" cols="80"></textarea>
+
+        <br />
+
+        <div className="row">
+          <textarea id="editor" className="bubble">
+            {App.defaultCode}
+          </textarea>
+          <p id="log" className="bubble"></p>
+        </div>
 
         <br />
 
@@ -21,10 +40,23 @@ class App extends React.Component {
     );
   }
 
-  analyseCode() {
+  analyseCode = () => {
     const code = document.getElementById("editor").value;
     const fn = parseFunction(code);
-  }
+    const result = analyseFunction(fn);
+    this.logResult(result);
+  };
+
+  logResult = (result) => {
+    document.getElementById("log").textContent +=
+      "Function gave result: " + result;
+  };
 }
 
 export default App;
+
+/* TODO:
+
+Optimisation: reduce DOM traversal by storing consts pointing to elems
+
+*/
