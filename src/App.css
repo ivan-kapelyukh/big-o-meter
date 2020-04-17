@@ -5,7 +5,7 @@
 .row {
   display: flex;
   justify-content: center;
-  height: 60vh;
+  height: 80vh;
 }
 
 #editor {
