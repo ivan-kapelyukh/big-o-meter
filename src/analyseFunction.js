@@ -5,7 +5,7 @@ export function analyseFunction(fn, addToLog) {
 
 export function varyRuntimes(fn, addToLog) {
   let inputSize = 0;
-  let n = 100;
+  let n = 32;
 
   let inputSizes = [];
   let times = [];

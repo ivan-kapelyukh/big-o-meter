@@ -16,14 +16,18 @@ class App extends React.Component {
     graphData: [[]],
   };
 
-  static defaultCode = `function sumTo(n) {
+  static defaultCode = `function cube(n) {
     let sum = 0;
     for (let i = 1; i <= n; i++) {
-      sum += i;
+      for (let j = 1; j <= n; j++) {
+        for (let k = 1; k <= n; k++) {
+          sum++;
+        }
+      }
     }
 
     return sum;
-}`;
+  }`;
 
   render() {
     return (
@@ -88,5 +92,42 @@ export default App;
 /* TODO:
 
 Optimisation: reduce DOM traversal by storing consts pointing to elems
+
+*/
+
+/* Some fun functions:
+
+function sumTo(n) {
+    let sum = 0;
+    for (let i = 1; i <= n; i++) {
+      sum += i;
+    }
+
+    return sum;
+}
+
+function square(n) {
+  let sum = 0;
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= n; j++) {
+      sum++;
+    }
+  }
+
+  return sum;
+}
+
+function cube(n) {
+  let sum = 0;
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= n; j++) {
+      for (let k = 1; k <= n; k++) {
+        sum++;
+      }
+    }
+  }
+
+  return sum;
+}
 
 */
