@@ -1,14 +1,12 @@
 export function analyseFunction(fn, addToLog) {
-  const [inputSizes, times] = varyRuntimes(fn, addToLog);
-  return [inputSizes, times];
+  return varyRuntimes(fn, addToLog);
 }
 
 export function varyRuntimes(fn, addToLog) {
   let inputSize = 0;
   let n = 32;
 
-  let inputSizes = [];
-  let times = [];
+  let inputRuntimes = [];
 
   for (let i = 0; i < n; i++) {
     const input = generateInput(inputSize);
@@ -17,12 +15,11 @@ export function varyRuntimes(fn, addToLog) {
       `Function took ${Math.round(time)} ms for input of size ${inputSize}`
     );
 
-    inputSizes.push(inputSize);
-    times.push(time);
+    inputRuntimes.push([inputSize, time]);
     inputSize = Math.floor(1.2 * inputSize) + 1;
   }
 
-  return [inputSizes, times];
+  return inputRuntimes;
 }
 
 export function timedCall(fn, input) {

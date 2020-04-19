@@ -1,4 +1,4 @@
-import rmse from "./regression";
+import { rmse } from "./regression";
 
 test("zero error when predicted matches expected", () => {
   expect(rmse([1, 2, 4], [1, 2, 4])).toBe(0);

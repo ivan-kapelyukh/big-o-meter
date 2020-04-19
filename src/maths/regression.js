@@ -1,4 +1,4 @@
-function rmse(expected, predicted) {
+export function rmse(expected, predicted) {
   const n = expected.length;
   return Math.sqrt(
     expected
@@ -7,5 +7,3 @@ function rmse(expected, predicted) {
       (1.0 * n)
   );
 }
-
-module.exports = rmse;
