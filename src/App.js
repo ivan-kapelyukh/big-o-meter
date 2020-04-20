@@ -68,17 +68,17 @@ class App extends React.Component {
   analyseCode = () => {
     const code = document.getElementById("editor").value;
     const fn = parseFunction(code);
-    const inputTimes = analyseFunction(fn, this.addToLog);
-    this.plotGraph(inputTimes);
+    const inputRuntimes = analyseFunction(fn, this.addToLog);
+    this.plotGraph(inputRuntimes);
   };
 
   addToLog = (entry) => {
     document.getElementById("log").textContent += entry + "\n";
   };
 
-  plotGraph = (inputTimes) => {
+  plotGraph = (inputRuntimes) => {
     const headings = ["Input size", "Runtime"];
-    const graphData = [headings, ...inputTimes];
+    const graphData = [headings, ...inputRuntimes];
     this.setState({ graphShown: true, graphData: graphData });
   };
 }

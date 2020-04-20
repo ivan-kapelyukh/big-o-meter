@@ -1,8 +1,14 @@
+import regression from "regression";
+
 export function analyseFunction(fn, addToLog) {
-  return varyRuntimes(fn, addToLog);
+  const inputRuntimes = varyRuntimes(fn, addToLog);
+  const model = fitModel(inputRuntimes);
+  addToLog(`Coeff: ${model.coeff}, power: ${model.power}`);
+  return inputRuntimes;
 }
 
 export function varyRuntimes(fn, addToLog) {
+  const MIN_TIME = 100;
   let inputSize = 0;
   let n = 32;
 
@@ -19,6 +25,8 @@ export function varyRuntimes(fn, addToLog) {
     inputSize = Math.floor(1.2 * inputSize) + 1;
   }
 
+  // Filter out very low runtimes: those are less robust.
+  inputRuntimes = inputRuntimes.filter(([inputSize, time]) => time > MIN_TIME);
   return inputRuntimes;
 }
 
@@ -31,6 +39,18 @@ export function timedCall(fn, input) {
 
 export function generateInput(size) {
   return size;
+}
+
+export function fitModel(data) {
+  const logData = data
+    .filter(([x, y]) => x > 0 && y > 0)
+    .map(([x, y]) => [Math.log(x), Math.log(y)]);
+  const [gradient, intercept] = regression.linear(logData, {
+    precision: 5,
+  }).equation;
+  const power = gradient;
+  const coeff = Math.exp(intercept);
+  return { coeff, power };
 }
 
 /* TODO:
