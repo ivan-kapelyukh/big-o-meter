@@ -8,28 +8,41 @@ export function analyseFunction(fn, addToLog) {
 }
 
 export function varyRuntimes(fn, addToLog) {
-  // Filter out very low runtimes: those are less robust.
-  const MIN_TIME = 100;
   const TIME_LIMIT = 8000;
 
   let inputSize = 0;
   let totalTime = 0;
   let inputRuntimes = [];
+  let sizeGrowth = 1.1;
 
   while (totalTime < TIME_LIMIT) {
     const input = generateInput(inputSize);
     const time = timedCall(fn, input);
 
-    if (time >= MIN_TIME) {
-      addToLog(
-        `Function took ${Math.round(time)} ms for input of size ${inputSize}`
-      );
-      inputRuntimes.push([inputSize, time]);
-      totalTime += time;
+    addToLog(
+      `Function took ${Math.round(time)} ms for input of size ${inputSize}`
+    );
+    inputRuntimes.push([inputSize, time]);
+    totalTime += time;
+
+    // Grow or cut growthFactor to keep reasonable runtime growth rate.
+    if (inputRuntimes.length >= 2) {
+      const timeGrowth =
+        inputRuntimes[inputRuntimes.length - 1][1] /
+        inputRuntimes[inputRuntimes.length - 2][1];
+      if (timeGrowth <= 1.5) {
+        sizeGrowth = 1.1;
+      } else {
+        sizeGrowth = 1.01;
+      }
     }
 
-    inputSize = Math.floor(1.05 * inputSize) + 1;
+    inputSize = Math.floor(sizeGrowth * inputSize) + 1;
   }
+
+  // Filter out very low runtimes: those are less robust.
+  const MIN_TIME = 100;
+  inputRuntimes = inputRuntimes.filter(([inputSize, time]) => time >= MIN_TIME);
 
   return inputRuntimes;
 }
@@ -51,5 +64,6 @@ New thread
 Timeout
 Can propagate actual function result around easily if need be
 Go through planned input sizes many times and take medians at end
+Figure out: is it statistically wrong to choose new input vals based on output of old ones?
 
 */

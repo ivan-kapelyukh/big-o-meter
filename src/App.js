@@ -16,13 +16,14 @@ class App extends React.Component {
     graphData: [[]],
   };
 
-  static defaultCode = `function fib(n) {
-    if (n <= 1) {
-      return n;
+  static defaultCode = `function sumTo(n) {
+    let sum = 0;
+    for (let i = 1; i <= n; i++) {
+      sum += i;
     }
 
-    return fib(n - 1) + fib(n - 2);
-  }`;
+    return sum;
+}`;
 
   render() {
     return (
@@ -89,12 +90,12 @@ Optimisation: reduce DOM traversal by storing consts pointing to elems
 /* Some fun functions:
 
 function sumTo(n) {
-    let sum = 0;
-    for (let i = 1; i <= n; i++) {
-      sum += i;
-    }
+  let sum = 0;
+  for (let i = 1; i <= n; i++) {
+    sum += i;
+  }
 
-    return sum;
+  return sum;
 }
 
 function square(n) {
