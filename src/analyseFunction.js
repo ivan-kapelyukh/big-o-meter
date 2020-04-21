@@ -1,5 +1,4 @@
-import regression from "regression";
-import { rmse, r2 } from "./maths/regression.js";
+import { fitModel } from "./stats";
 
 export function analyseFunction(fn, addToLog) {
   const inputRuntimes = varyRuntimes(fn, addToLog);
@@ -40,43 +39,6 @@ export function timedCall(fn, input) {
 
 export function generateInput(size) {
   return size;
-}
-
-export function fitModel(data) {
-  const polyModel = fitPolyModel(data);
-  return polyModel;
-}
-
-export function fitPolyModel(data) {
-  const logData = data
-    .filter(([x, y]) => x > 0 && y > 0)
-    .map(([x, y]) => [Math.log(x), Math.log(y)]);
-  const [gradient, intercept] = regression.linear(logData, {
-    precision: 10,
-  }).equation;
-
-  console.log(`Gradient: ${gradient}`);
-  console.log(`Old offset: ${intercept}`);
-
-  // Power is integer, so need new optimal offset given rounded gradient.
-  const power = Math.round(gradient);
-  const offset =
-    logData.map(([x, y]) => y - power * x).reduce((a, b) => a + b, 0.0) /
-    logData.length;
-
-  console.log(`New offset: ${offset}`);
-
-  const coeff = Math.exp(offset);
-  const model = { power, coeff };
-  model.predict = (x) => model.coeff * Math.pow(x, model.power);
-
-  const observed = data.map(([_, y]) => y);
-  const predicted = data.map(([x, _]) => model.predict(x));
-  model.r2 = r2(observed, predicted);
-
-  console.log(model);
-
-  return model;
 }
 
 /* TODO:
