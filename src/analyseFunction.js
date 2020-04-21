@@ -8,25 +8,29 @@ export function analyseFunction(fn, addToLog) {
 }
 
 export function varyRuntimes(fn, addToLog) {
+  // Filter out very low runtimes: those are less robust.
   const MIN_TIME = 100;
-  let inputSize = 0;
-  let n = 54;
+  const TIME_LIMIT = 8000;
 
+  let inputSize = 0;
+  let totalTime = 0;
   let inputRuntimes = [];
 
-  for (let i = 0; i < n; i++) {
+  while (totalTime < TIME_LIMIT) {
     const input = generateInput(inputSize);
     const time = timedCall(fn, input);
-    addToLog(
-      `Function took ${Math.round(time)} ms for input of size ${inputSize}`
-    );
 
-    inputRuntimes.push([inputSize, time]);
-    inputSize = Math.floor(1.1 * inputSize) + 1;
+    if (time >= MIN_TIME) {
+      addToLog(
+        `Function took ${Math.round(time)} ms for input of size ${inputSize}`
+      );
+      inputRuntimes.push([inputSize, time]);
+      totalTime += time;
+    }
+
+    inputSize = Math.floor(1.05 * inputSize) + 1;
   }
 
-  // Filter out very low runtimes: those are less robust.
-  inputRuntimes = inputRuntimes.filter(([inputSize, time]) => time > MIN_TIME);
   return inputRuntimes;
 }
 

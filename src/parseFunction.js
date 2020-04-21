@@ -1,8 +1,6 @@
 export function parseFunction(code) {
-  const argument = parseArgument(code);
-  const body = parseBody(code);
-
-  return Function(argument, body);
+  // Need to use this indirection to support recursion.
+  return Function("return " + code)();
 }
 
 export function parseName(code) {

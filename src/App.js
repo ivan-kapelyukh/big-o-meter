@@ -16,17 +16,12 @@ class App extends React.Component {
     graphData: [[]],
   };
 
-  static defaultCode = `function cube(n) {
-    let sum = 0;
-    for (let i = 1; i <= n; i++) {
-      for (let j = 1; j <= n; j++) {
-        for (let k = 1; k <= n; k++) {
-          sum++;
-        }
-      }
+  static defaultCode = `function fib(n) {
+    if (n <= 1) {
+      return n;
     }
 
-    return sum;
+    return fib(n - 1) + fib(n - 2);
   }`;
 
   render() {
@@ -124,6 +119,14 @@ function cube(n) {
   }
 
   return sum;
+}
+
+function fib(n) {
+  if (n <= 1) {
+    return n;
+  }
+
+  return fib(n - 1) + fib(n - 2);
 }
 
 */
