@@ -11,6 +11,11 @@ export function fitModel(data) {
   const polyModel = trainPolyModel(training);
   const expModel = trainExpModel(training);
 
+  console.log("Poly model:");
+  console.log(polyModel);
+  console.log("Exp Model:");
+  console.log(expModel);
+
   polyModel.r2 = testModel(polyModel, testing);
   expModel.r2 = testModel(expModel, testing);
 
@@ -24,8 +29,8 @@ export function fitModel(data) {
 // Use largest runtime for testing: most discriminatory.
 export function splitData(data) {
   const n = data.length;
-  const testing = data.filter((_, i) => (n - 1 - i) % 3 == 0);
-  const training = data.filter((_, i) => (n - 1 - i) % 3 != 0);
+  const testing = data.filter((_, i) => (n - 1 - i) % 3 === 0);
+  const training = data.filter((_, i) => (n - 1 - i) % 3 !== 0);
   return [training, testing];
 }
 
@@ -33,9 +38,11 @@ export function trainPolyModel(data) {
   const logData = data
     .filter(([x, y]) => x > 0 && y > 0)
     .map(([x, y]) => [Math.log2(x), Math.log2(y)]);
-  const [gradient, intercept] = regression.linear(logData, {
+  const [gradient, _] = regression.linear(logData, {
     precision: 10,
   }).equation;
+
+  console.log(`Real poly grad: ${gradient}`);
 
   // Power is integer, so need new optimal offset given rounded gradient.
   const power = Math.round(gradient);
@@ -45,13 +52,27 @@ export function trainPolyModel(data) {
 
   const coeff = Math.pow(2, offset);
   const model = { power, coeff };
-  model.toString = () => `${coeff} * x ^ ${power}`;
+  model.toString = () =>
+    `${+coeff.toPrecision(2)} * x ^ ${+power.toPrecision(2)}`;
   model.predict = (x) => coeff * Math.pow(x, power);
-
-  console.log("Poly model:");
-  console.log(model);
+  model.class = orderToClass(power);
 
   return model;
+}
+
+function orderToClass(order) {
+  switch (order) {
+    case 0:
+      return "constant";
+    case 1:
+      return "linear";
+    case 2:
+      return "quadratic";
+    case 3:
+      return "cubic";
+    default:
+      return `polynomial order ${order}`;
+  }
 }
 
 export function trainExpModel(data) {
@@ -68,11 +89,10 @@ export function trainExpModel(data) {
   const powerCoeff = gradient;
 
   const model = { base, coeff, powerCoeff };
-  model.toString = () => `${coeff} * ${base} ^ (${powerCoeff} * x)`;
+  model.toString = () =>
+    `${+coeff.toPrecision(2)} * ${base} ^ (${+powerCoeff.toPrecision(2)} * x)`;
   model.predict = (x) => coeff * Math.pow(base, powerCoeff * x);
-
-  console.log("Exp model:");
-  console.log(model);
+  model.class = "exponential";
 
   return model;
 }

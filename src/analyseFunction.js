@@ -3,8 +3,9 @@ import { fitModel } from "./stats";
 export function analyseFunction(fn, addToLog) {
   const inputRuntimes = varyRuntimes(fn, addToLog);
   const model = fitModel(inputRuntimes);
-  addToLog(`Selected model: ${model}`);
-  addToLog(`r2: ${model.r2}`);
+  addToLog("Runtime complexity is:");
+  addToLog(model.class);
+  addToLog(`r2: ${+model.r2.toPrecision(4)}`);
   return inputRuntimes;
 }
 
@@ -20,9 +21,6 @@ export function varyRuntimes(fn, addToLog) {
     const input = generateInput(inputSize);
     const time = timedCall(fn, input);
 
-    addToLog(
-      `Function took ${Math.round(time)} ms for input of size ${inputSize}`
-    );
     inputRuntimes.push([inputSize, time]);
     totalTime += time;
 

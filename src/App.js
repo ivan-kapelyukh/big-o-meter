@@ -16,12 +16,14 @@ class App extends React.Component {
     graphData: [[]],
   };
 
-  static defaultCode = `function fib(n) {
-    if (n <= 1) {
-      return n;
+  static defaultCode = `function arithSeriesQuadratic(n) {
+    let sum = 0;
+    for (let i = 1; i <= n; i++) {
+      for (let j = 1; j <= i; j++) {
+        sum++;
+      }
     }
-
-    return fib(n - 1) + fib(n - 2);
+    return sum;
   }`;
 
   render() {
@@ -139,6 +141,16 @@ function monsterFib(n) {
   }
 
   return monsterFib(n - 1) + monsterFib(n - 2) + monsterFib(n - 3) + monsterFib(n - 4);
+}
+
+function arithSeriesQuadratic(n) {
+  let sum = 0;
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= i; j++) {
+      sum++;
+    }
+  }
+  return sum;
 }
 
 */
