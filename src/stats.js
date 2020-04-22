@@ -20,12 +20,12 @@ export function fitModel(data) {
   return [polyModel, expModel].reduce((m1, m2) => (m2.r2 > m1.r2 ? m2 : m1));
 }
 
-// Take last third for testing, rest for training.
-// Larger runtimes more discriminatory.
+// Take third for testing, rest for training.
+// Use largest runtime for testing: most discriminatory.
 export function splitData(data) {
   const n = data.length;
-  const testing = data.slice(Math.floor((2 * n) / 3));
-  const training = data.slice(0, Math.floor((2 * n) / 3));
+  const testing = data.filter((_, i) => (n - 1 - i) % 3 == 0);
+  const training = data.filter((_, i) => (n - 1 - i) % 3 != 0);
   return [training, testing];
 }
 
