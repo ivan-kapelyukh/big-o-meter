@@ -16,14 +16,13 @@ class App extends React.Component {
     graphData: [[]],
   };
 
-  static defaultCode = `function sumTo(n) {
-    let sum = 0;
-    for (let i = 1; i <= n; i++) {
-      sum += i;
+  static defaultCode = `function fib(n) {
+    if (n <= 1) {
+      return n;
     }
 
-    return sum;
-}`;
+    return fib(n - 1) + fib(n - 2);
+  }`;
 
   render() {
     return (
@@ -128,6 +127,18 @@ function fib(n) {
   }
 
   return fib(n - 1) + fib(n - 2);
+}
+
+function monsterFib(n) {
+  if (n < 0) {
+    return 0;
+  }
+
+  if (n <= 1) {
+    return n;
+  }
+
+  return monsterFib(n - 1) + monsterFib(n - 2) + monsterFib(n - 3) + monsterFib(n - 4);
 }
 
 */

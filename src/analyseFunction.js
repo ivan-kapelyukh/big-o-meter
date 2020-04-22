@@ -3,7 +3,8 @@ import { fitModel } from "./stats";
 export function analyseFunction(fn, addToLog) {
   const inputRuntimes = varyRuntimes(fn, addToLog);
   const model = fitModel(inputRuntimes);
-  addToLog(`Coeff: ${model.coeff}, power: ${model.power}`);
+  addToLog(`Selected model: ${model}`);
+  addToLog(`r2: ${model.r2}`);
   return inputRuntimes;
 }
 
@@ -30,7 +31,7 @@ export function varyRuntimes(fn, addToLog) {
       const timeGrowth =
         inputRuntimes[inputRuntimes.length - 1][1] /
         inputRuntimes[inputRuntimes.length - 2][1];
-      if (timeGrowth <= 1.5) {
+      if (timeGrowth <= 1.4) {
         sizeGrowth = 1.1;
       } else {
         sizeGrowth = 1.01;
@@ -65,5 +66,6 @@ Timeout
 Can propagate actual function result around easily if need be
 Go through planned input sizes many times and take medians at end
 Figure out: is it statistically wrong to choose new input vals based on output of old ones?
+Figure out: (0, 0) - is it implicitly included, and should it be?
 
 */
