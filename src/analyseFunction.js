@@ -1,15 +1,12 @@
 import { fitModel } from "./stats";
 
-export function analyseFunction(fn, addToLog) {
-  const inputRuntimes = varyRuntimes(fn, addToLog);
+export function analyseFunction(fn) {
+  const inputRuntimes = varyRuntimes(fn);
   const model = fitModel(inputRuntimes);
-  addToLog("Runtime complexity is:");
-  addToLog(model.class);
-  addToLog(`r2: ${+model.r2.toPrecision(4)}`);
-  return inputRuntimes;
+  return [inputRuntimes, model];
 }
 
-export function varyRuntimes(fn, addToLog) {
+export function varyRuntimes(fn) {
   const TIME_LIMIT = 8000;
 
   let inputSize = 0;
@@ -25,14 +22,18 @@ export function varyRuntimes(fn, addToLog) {
     totalTime += time;
 
     // Grow or cut growthFactor to keep reasonable runtime growth rate.
+    const FAST_SIZE_GROWTH = 1.1;
+    const SLOW_SIZE_GROWTH = 1.01;
+    const TIME_GROWTH_THRESHOLD = 1.4;
+
     if (inputRuntimes.length >= 2) {
       const timeGrowth =
         inputRuntimes[inputRuntimes.length - 1][1] /
         inputRuntimes[inputRuntimes.length - 2][1];
-      if (timeGrowth <= 1.4) {
-        sizeGrowth = 1.1;
+      if (timeGrowth < TIME_GROWTH_THRESHOLD) {
+        sizeGrowth = FAST_SIZE_GROWTH;
       } else {
-        sizeGrowth = 1.01;
+        sizeGrowth = SLOW_SIZE_GROWTH;
       }
     }
 

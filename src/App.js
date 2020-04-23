@@ -12,7 +12,7 @@ import { analyseFunction } from "./analyseFunction.js";
 
 class App extends React.Component {
   state = {
-    graphShown: false,
+    resultsShown: false,
     graphData: [[]],
   };
 
@@ -39,44 +39,45 @@ class App extends React.Component {
             className="bubble"
             defaultValue={App.defaultCode}
           ></textarea>
-          <p id="log" className="bubble"></p>
+          {this.renderResults()}
         </div>
 
         <br />
 
         <button onClick={this.analyseCode}>Analyse</button>
-
-        {this.renderGraph()}
       </div>
     );
   }
 
-  renderGraph = () => {
-    return this.state.graphShown ? (
-      <Chart
-        chartType="ScatterChart"
-        data={this.state.graphData}
-        width="100%"
-        height="80vh"
-      />
+  renderResults = () => {
+    return this.state.resultsShown ? (
+      <div className="bubble">
+        <Chart
+          chartType="ScatterChart"
+          data={this.state.graphData}
+          width="100%"
+          height="50vh"
+        />
+        <div className="conclusion">
+          <p>Runtime complexity determined to be</p>
+          <p>{this.state.model.class}</p>
+          <p>
+            Model explains {+this.state.model.r2.toPrecision(4) * 100}% of
+            runtime variance
+          </p>
+        </div>
+      </div>
     ) : null;
   };
 
   analyseCode = () => {
     const code = document.getElementById("editor").value;
     const fn = parseFunction(code);
-    const inputRuntimes = analyseFunction(fn, this.addToLog);
-    this.plotGraph(inputRuntimes);
-  };
+    const [inputRuntimes, model] = analyseFunction(fn);
 
-  addToLog = (entry) => {
-    document.getElementById("log").textContent += entry + "\n";
-  };
-
-  plotGraph = (inputRuntimes) => {
     const headings = ["Input size", "Runtime"];
     const graphData = [headings, ...inputRuntimes];
-    this.setState({ graphShown: true, graphData: graphData });
+    this.setState({ resultsShown: true, graphData: graphData, model: model });
   };
 }
 
