@@ -17,19 +17,19 @@ class App extends React.Component {
   };
 
   static defaultCode = `function arithSeriesQuadratic(n) {
-    let sum = 0;
-    for (let i = 1; i <= n; i++) {
-      for (let j = 1; j <= i; j++) {
-        sum++;
-      }
+  let sum = 0;
+  for (let i = 1; i <= n; i++) {
+    for (let j = 1; j <= i; j++) {
+      sum++;
     }
-    return sum;
-  }`;
+  }
+  return sum;
+}`;
 
   render() {
     return (
       <div className="App">
-        <p>Hello there!</p>
+        <h1 id="title">Big-O-Meter</h1>
 
         <br />
 
@@ -37,6 +37,7 @@ class App extends React.Component {
           <textarea
             id="editor"
             className="bubble"
+            spellCheck="false"
             defaultValue={App.defaultCode}
           ></textarea>
           {this.renderResults()}
@@ -44,7 +45,9 @@ class App extends React.Component {
 
         <br />
 
-        <button onClick={this.analyseCode}>Analyse</button>
+        <button onClick={this.analyseCode} className="primary">
+          Analyse
+        </button>
       </div>
     );
   }
