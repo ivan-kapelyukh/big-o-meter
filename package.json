@@ -137,5 +137,8 @@
     "presets": [
       "react-app"
     ]
+  },
+  "devDependencies": {
+    "worker-plugin": "^4.0.2"
   }
 }

@@ -1,20 +1,28 @@
 import React from "react";
 import "./App.css";
-import {
-  parseFunction,
-  parseName,
-  parseArgument,
-  parseBody,
-} from "./parseFunction.js";
 import { Chart } from "react-google-charts";
 
-import { analyseFunction } from "./analyseFunction.js";
-
 class App extends React.Component {
-  state = {
-    resultsShown: false,
-    graphData: [[]],
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      resultsShown: false,
+      graphData: [[]],
+    };
+
+    this.analysisWorker = new Worker("./analysisWorker.js", { type: "module" });
+    this.analysisWorker.onmessage = (e) => {
+      console.log("App received:");
+      console.log(e.data);
+
+      const [inputRuntimes, model] = JSON.parse(e.data);
+
+      const headings = ["Input size", "Runtime"];
+      const graphData = [headings, ...inputRuntimes];
+      this.setState({ resultsShown: true, graphData: graphData, model: model });
+    };
+  }
 
   static defaultCode = `function arithSeriesQuadratic(n) {
   let sum = 0;
@@ -59,11 +67,15 @@ class App extends React.Component {
           chartType="ScatterChart"
           data={this.state.graphData}
           width="100%"
-          height="50vh"
+          height="40vh"
+          id="graph"
         />
         <div className="conclusion">
           <p>Runtime complexity determined to be</p>
-          <p>{this.state.model.class}</p>
+          <p id="runtimeClass">
+            {this.state.model.class.charAt(0).toUpperCase() +
+              this.state.model.class.slice(1)}
+          </p>
           <p>
             Model explains {+this.state.model.r2.toPrecision(4) * 100}% of
             runtime variance
@@ -75,12 +87,7 @@ class App extends React.Component {
 
   analyseCode = () => {
     const code = document.getElementById("editor").value;
-    const fn = parseFunction(code);
-    const [inputRuntimes, model] = analyseFunction(fn);
-
-    const headings = ["Input size", "Runtime"];
-    const graphData = [headings, ...inputRuntimes];
-    this.setState({ resultsShown: true, graphData: graphData, model: model });
+    this.analysisWorker.postMessage(code);
   };
 }
 
