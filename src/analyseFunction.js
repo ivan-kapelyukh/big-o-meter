@@ -1,13 +1,13 @@
 import { fitModel } from "./stats";
 
-export function analyseFunction(fn) {
-  const inputRuntimes = varyRuntimes(fn);
+export function analyseFunction(fn, updateProgress) {
+  const inputRuntimes = varyRuntimes(fn, updateProgress);
   const model = fitModel(inputRuntimes);
   return [inputRuntimes, model];
 }
 
-export function varyRuntimes(fn) {
-  const TIME_LIMIT = 8000;
+export function varyRuntimes(fn, updateProgress) {
+  const TIME_LIMIT = 10000;
 
   let inputSize = 0;
   let totalTime = 0;
@@ -20,6 +20,9 @@ export function varyRuntimes(fn) {
 
     inputRuntimes.push([inputSize, time]);
     totalTime += time;
+
+    // Once we get to TIME_LIMIT, almost done analysing!
+    updateProgress(Math.min(0.95, totalTime / TIME_LIMIT));
 
     // Grow or cut growthFactor to keep reasonable runtime growth rate.
     const FAST_SIZE_GROWTH = 1.1;

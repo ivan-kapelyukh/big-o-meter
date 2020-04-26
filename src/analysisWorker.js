@@ -2,12 +2,14 @@ import { analyseFunction } from "./analyseFunction.js";
 import { parseFunction } from "./parseFunction.js";
 
 onmessage = (e) => {
-  console.log("Worker got message:");
-  console.log(e.data);
+  const updateProgress = (analysisProgress) => {
+    postMessage(JSON.stringify({ analysisProgress }));
+  };
+
   const fn = parseFunction(e.data);
-  const result = analyseFunction(fn);
+  const results = analyseFunction(fn, updateProgress);
 
   // Serialise since result contains function object
   // which cannot be cloned automatically.
-  postMessage(JSON.stringify(result));
+  postMessage(JSON.stringify({ analysisProgress: 1.0, results: results }));
 };

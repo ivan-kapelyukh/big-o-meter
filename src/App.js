@@ -1,26 +1,38 @@
 import React from "react";
-import "./App.css";
 import { Chart } from "react-google-charts";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import "./App.css";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      analysisProgress: 0.0,
+      analysing: false,
       resultsShown: false,
       graphData: [[]],
     };
 
     this.analysisWorker = new Worker("./analysisWorker.js", { type: "module" });
     this.analysisWorker.onmessage = (e) => {
-      console.log("App received:");
-      console.log(e.data);
+      const { analysisProgress, results } = JSON.parse(e.data);
 
-      const [inputRuntimes, model] = JSON.parse(e.data);
+      this.setState({ analysisProgress });
 
-      const headings = ["Input size", "Runtime"];
-      const graphData = [headings, ...inputRuntimes];
-      this.setState({ resultsShown: true, graphData: graphData, model: model });
+      if (analysisProgress === 1.0) {
+        const [inputRuntimes, model] = results;
+
+        const headings = ["Input size", "Runtime"];
+        const graphData = [headings, ...inputRuntimes];
+        this.setState({
+          analysing: false,
+          resultsShown: true,
+          graphData: graphData,
+          model: model,
+        });
+      }
     };
   }
 
@@ -53,9 +65,17 @@ class App extends React.Component {
 
         <br />
 
-        <button onClick={this.analyseCode} className="primary">
-          Analyse
-        </button>
+        {this.state.analysing ? (
+          <CircularProgressbar
+            value={this.state.analysisProgress}
+            maxValue={1.0}
+            text={`${Math.round(this.state.analysisProgress * 100)}%`}
+          />
+        ) : (
+          <button onClick={this.analyseCode} className="primary">
+            Analyse
+          </button>
+        )}
       </div>
     );
   }
@@ -88,6 +108,7 @@ class App extends React.Component {
   analyseCode = () => {
     const code = document.getElementById("editor").value;
     this.analysisWorker.postMessage(code);
+    this.setState({ analysisProgress: 0.0, analysing: true });
   };
 }
 

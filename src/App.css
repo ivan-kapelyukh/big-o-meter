@@ -90,3 +90,21 @@ button:hover {
   font-size: 4vh;
   font-family: "Pacifico", cursive;
 }
+
+.CircularProgressbar {
+  width: 12vmin;
+  height: 12vmin;
+}
+
+.CircularProgressbar .CircularProgressbar-text {
+  fill: white;
+  font-size: 4vmin;
+}
+
+.CircularProgressbar .CircularProgressbar-trail {
+  stroke: white;
+}
+
+.CircularProgressbar .CircularProgressbar-path {
+  stroke: #40c9ff;
+}
