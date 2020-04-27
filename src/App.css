@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@300&family=Ubuntu+Mono&display=swap");
+
+* {
+  color: white;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  background-image: linear-gradient(#3dfaff, #40c9ff, #ef1cbb);
+  text-align: center;
+  height: 100vh;
+}
+
+#title {
+  margin: 0;
+  padding-top: 10px;
+  font-size: 5vh;
+  font-family: "Pacifico", cursive;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  height: 65vh;
+}
+
+#editor {
+  resize: none;
+  border: none;
+  outline: none;
+  background-color: rgba(0, 0, 0, 0);
+  font-family: "Ubuntu Mono", monospace;
+  padding: 20px;
+  font-size: 2.5vmin;
+  border-radius: 7vmin;
+  box-shadow: inset 0 0 10px white;
+}
+
+.bubble {
+  width: 40vw;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+#log {
+  border: 1px solid;
+  white-space: pre;
+}
+
+button {
+  color: #fef0f4;
+  font-family: "Pacifico", cursive;
+  font-weight: 400;
+}
+
+button.primary {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-image: linear-gradient(to right, #fc618e, #fc7da2);
+  box-shadow: 0 0 5px #fc618e;
+  border: 0;
+  font-size: 24px;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none;
+}
+
+button:hover {
+  box-shadow: 0 0 8px #fc618e;
+  transition: 0.5s;
+}
+
+.conclusion {
+  margin-top: 30px;
+}
+
+.conclusion * {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#runtimeClass {
+  font-size: 4vh;
+  font-family: "Pacifico", cursive;
+}
+
+.CircularProgressbar {
+  width: 12vmin;
+  height: 12vmin;
+}
+
+.CircularProgressbar .CircularProgressbar-text {
+  fill: white;
+  font-size: 4vmin;
+}
+
+.CircularProgressbar .CircularProgressbar-trail {
+  stroke: white;
+}
+
+.CircularProgressbar .CircularProgressbar-path {
+  stroke: #40c9ff;
+}
+
+/* For Google Charts text */
+text {
+  fill: white;
+  font-style: normal;
+}
