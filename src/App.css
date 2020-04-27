@@ -108,3 +108,9 @@ button:hover {
 .CircularProgressbar .CircularProgressbar-path {
   stroke: #40c9ff;
 }
+
+/* For Google Charts text */
+text {
+  fill: white;
+  font-style: normal;
+}

@@ -89,6 +89,29 @@ class App extends React.Component {
           width="100%"
           height="40vh"
           id="graph"
+          options={{
+            hAxis: {
+              title: "Input size",
+              minVale: 0,
+              baselineColor: "white",
+              gridlineColor: "transparent",
+              titleTextStyle: {
+                fontSize: 15,
+              },
+            },
+            vAxis: {
+              title: "Runtime ms",
+              minValue: 0,
+              baselineColor: "white",
+              gridlineColor: "transparent",
+              titleTextStyle: {
+                fontSize: 15,
+              },
+            },
+            legend: "none",
+            colors: ["white"],
+            backgroundColor: "transparent",
+          }}
         />
         <div className="conclusion">
           <p>Runtime complexity determined to be</p>
@@ -97,7 +120,7 @@ class App extends React.Component {
               this.state.model.class.slice(1)}
           </p>
           <p>
-            Model explains {+this.state.model.r2.toPrecision(4) * 100}% of
+            Model explains {+(this.state.model.r2 * 100).toPrecision(4)}% of
             runtime variance
           </p>
         </div>
@@ -116,6 +139,7 @@ export default App;
 
 /* TODO:
 
+Dynamic sizing of Google Charts text (can't use viewport units in their API - will need to use JS)
 Optimisation: reduce DOM traversal by storing consts pointing to elems
 
 */

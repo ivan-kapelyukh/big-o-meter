@@ -7,7 +7,7 @@ export function analyseFunction(fn, updateProgress) {
 }
 
 export function varyRuntimes(fn, updateProgress) {
-  const TIME_LIMIT = 10000;
+  const TIME_LIMIT = 5000;
 
   let inputSize = 0;
   let totalTime = 0;
