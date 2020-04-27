@@ -1,0 +1,27 @@
+{
+  "files": {
+    "main.css": "/big-o-meter/static/css/main.efdc6b29.chunk.css",
+    "main.js": "/big-o-meter/static/js/main.b78e096e.chunk.js",
+    "main.js.map": "/big-o-meter/static/js/main.b78e096e.chunk.js.map",
+    "runtime-main.js": "/big-o-meter/static/js/runtime-main.5321ed1a.js",
+    "runtime-main.js.map": "/big-o-meter/static/js/runtime-main.5321ed1a.js.map",
+    "static/css/2.f524894f.chunk.css": "/big-o-meter/static/css/2.f524894f.chunk.css",
+    "static/js/2.73e3b696.chunk.js": "/big-o-meter/static/js/2.73e3b696.chunk.js",
+    "static/js/2.73e3b696.chunk.js.map": "/big-o-meter/static/js/2.73e3b696.chunk.js.map",
+    "index.html": "/big-o-meter/index.html",
+    "precache-manifest.6ba714b207436bfd0b2d9fd042eac97e.js": "/big-o-meter/precache-manifest.6ba714b207436bfd0b2d9fd042eac97e.js",
+    "service-worker.js": "/big-o-meter/service-worker.js",
+    "static/css/2.f524894f.chunk.css.map": "/big-o-meter/static/css/2.f524894f.chunk.css.map",
+    "static/css/main.efdc6b29.chunk.css.map": "/big-o-meter/static/css/main.efdc6b29.chunk.css.map",
+    "static/js/0.d245f6d4.chunk.worker.js": "/big-o-meter/static/js/0.d245f6d4.chunk.worker.js",
+    "static/js/0.d245f6d4.chunk.worker.js.map": "/big-o-meter/static/js/0.d245f6d4.chunk.worker.js.map",
+    "static/js/2.73e3b696.chunk.js.LICENSE.txt": "/big-o-meter/static/js/2.73e3b696.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.5321ed1a.js",
+    "static/css/2.f524894f.chunk.css",
+    "static/js/2.73e3b696.chunk.js",
+    "static/css/main.efdc6b29.chunk.css",
+    "static/js/main.b78e096e.chunk.js"
+  ]
+}
