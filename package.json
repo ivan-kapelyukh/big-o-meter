@@ -49,6 +49,7 @@
     "react-circular-progressbar": "^2.0.3",
     "react-dev-utils": "^10.2.1",
     "react-dom": "^16.13.1",
+    "react-ga": "^2.7.0",
     "react-google-charts": "^3.0.15",
     "regression": "^2.0.1",
     "resolve": "1.15.0",
@@ -67,7 +68,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "test": "node scripts/test.js",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -140,6 +143,8 @@
     ]
   },
   "devDependencies": {
+    "gh-pages": "^2.2.0",
     "worker-plugin": "^4.0.2"
-  }
+  },
+  "homepage": "https://ivan-kapelyukh.github.io/big-o-meter/"
 }

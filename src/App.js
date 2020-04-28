@@ -1,10 +1,22 @@
 import React from "react";
 import { Chart } from "react-google-charts";
 import { CircularProgressbar } from "react-circular-progressbar";
+import ReactGA from "react-ga";
 import "react-circular-progressbar/dist/styles.css";
 import "./App.css";
 
+ReactGA.initialize("UA-164770161-1", {
+  gaOptions: {
+    siteSpeedSampleRate: 100,
+  },
+});
+ReactGA.pageview(window.location.pathname + window.location.search);
+
 class App extends React.Component {
+  componentDidMount() {
+    document.title = "Big-O-Meter";
+  }
+
   constructor(props) {
     super(props);
 
@@ -116,13 +128,9 @@ class App extends React.Component {
         <div className="conclusion">
           <p>Runtime complexity determined to be</p>
           <p id="runtimeClass">
-            {this.state.model.class.charAt(0).toUpperCase() +
-              this.state.model.class.slice(1)}
+            {this.state.model.class.charAt(0).toUpperCase() + this.state.model.class.slice(1)}
           </p>
-          <p>
-            Model explains {+(this.state.model.r2 * 100).toPrecision(4)}% of
-            runtime variance
-          </p>
+          <p>Model explains {+(this.state.model.r2 * 100).toPrecision(4)}% of runtime variance</p>
         </div>
       </div>
     ) : null;
